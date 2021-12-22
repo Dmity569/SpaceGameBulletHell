@@ -4,40 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MenuActivity">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:srcCompat="@drawable/spase2"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="0dp" />
 
     <LinearLayout
-        android:layout_width="400dp"
-        android:layout_height="607dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="17dp"
         tools:layout_editor_absoluteY="72dp">
 
         <Button
-            android:id="@+id/play_button"
-            android:layout_width="161dp"
-            android:layout_height="88dp"
+            android:id="@+id/play"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
             android:text="Play" />
 
         <Button
-            android:id="@+id/Settings_Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/setting"
+            android:layout_width="130dp"
+            android:layout_height="60dp"
             android:text="Settings" />
 
         <Button
-            android:id="@+id/Creator_btton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/creators"
+            android:layout_width="130dp"
+            android:layout_height="60dp"
             android:text="Creators" />
     </LinearLayout>
 

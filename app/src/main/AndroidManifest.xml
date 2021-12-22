@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
 
-        <activity android:name=".MainActivity"
+        <activity android:name=".MenuActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:exported="true">
@@ -19,6 +19,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".ChoiceActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:exported="true">
         </activity>
     </application>
 
