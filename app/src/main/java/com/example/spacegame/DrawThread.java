@@ -13,12 +13,12 @@ public class DrawThread extends Thread {
 
     private SurfaceHolder surfaceHolder;
     private Bitmap bitmap;
-    int x = surfaceHolder.lockCanvas().getWidth() / 2;
-    int y = surfaceHolder.lockCanvas().getHeight();
+    int x = 450;
+    int y = 1400;
 
     public void setPos(int px, int py) {
-        x = px;
-        y = py;
+        x = x + px;
+        y = y + py;
     }
 
     private volatile boolean running = true;//флаг для остановки потока

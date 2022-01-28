@@ -3,6 +3,7 @@ package com.example.spacegame;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -20,5 +21,6 @@ public class LevelActivity extends AppCompatActivity {
         Toast.makeText(LevelActivity.this, "Level - " + Integer.toString(level_id + 1),
                 Toast.LENGTH_SHORT).show();
     }
+
 }
 
