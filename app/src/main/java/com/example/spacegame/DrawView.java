@@ -7,24 +7,27 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
-public class DrawView extends SurfaceView implements SurfaceHolder.Callback, View.OnTouchListener {
+public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
 
     private DrawThread drawThread;
 
     @Override
-    public boolean onTouch(View view, MotionEvent e) {
+    public boolean onTouchEvent(MotionEvent e) {
         float x = e.getX();
         float y = e.getY();
-        Log.d("DEBUG", "touch");
+        Log.d("DEBUG", "Toch");
         switch (e.getAction()) {
             case MotionEvent.ACTION_MOVE:
-                Log.d("DEBUG", "move");
+                Log.d("DEBUG", Integer.toString((int)(e.getX() - x)));
+                Log.d("DEBUG", Integer.toString((int)(e.getY() - y)));
                 drawThread.setPos((int)(e.getX() - x), (int)(e.getY() - y));
+                x = e.getX();
+                y = e.getY();
                 break;
             default:
                 break;
         }
-        return true;
+        return false;
     }
 
 
