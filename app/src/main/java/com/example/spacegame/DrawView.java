@@ -12,6 +12,8 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
 
     private DrawThread drawThread;
     private LogicThread logicThread;
+    float x;
+    float y;
 
     /*
     @Override
@@ -45,17 +47,21 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
             case MotionEvent.ACTION_DOWN:
                 Log.d("DEBUG", "DOWN " + Float.toString(e.getX()));
                 Log.d("DEBUG", "DOWN " + Float.toString(e.getY()));
-                drawThread.setPos(e.getX(), e.getY());
+                x = e.getX();
+                y = e.getY();
+                logicThread.player.health -= 10;
                 break;
             case MotionEvent.ACTION_MOVE:
                 Log.d("DEBUG", "MOVE " + Float.toString(e.getX()));
                 Log.d("DEBUG", "MOVE " + Float.toString(e.getY()));
-                drawThread.setPos(e.getX(), e.getY());
+                logicThread.player.setPos(e.getX() - x, e.getY() - y);
+                x = e.getX();
+                y = e.getY();
                 break;
             default:
                 break;
         }
-        return false;
+        return true;
     }
 
 
@@ -67,10 +73,12 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        logicThread = new LogicThread();
+        logicThread = new LogicThread(getContext());
         drawThread = new DrawThread(getContext(),getHolder());
         logicThread.start();
         drawThread.start();
+        logicThread.drawThread = drawThread;
+        drawThread.logicThread = logicThread;
     }
 
     @Override
