@@ -45,15 +45,11 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
     public boolean onTouchEvent(MotionEvent e) {
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.d("DEBUG", "DOWN " + Float.toString(e.getX()));
-                Log.d("DEBUG", "DOWN " + Float.toString(e.getY()));
                 x = e.getX();
                 y = e.getY();
                 logicThread.player.health -= 10;
                 break;
             case MotionEvent.ACTION_MOVE:
-                Log.d("DEBUG", "MOVE " + Float.toString(e.getX()));
-                Log.d("DEBUG", "MOVE " + Float.toString(e.getY()));
                 logicThread.player.setPos(e.getX() - x, e.getY() - y);
                 x = e.getX();
                 y = e.getY();
