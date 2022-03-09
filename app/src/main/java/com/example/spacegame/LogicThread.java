@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Random;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -27,6 +28,7 @@ class Player {
     Bitmap sprite;
     ArrayList<P_Projectile> proj_list = new ArrayList(50);
     Context context;
+    int t = 0;
     public Player(float pos_x, float pos_y, int hp, Bitmap bitmap, Context cxt) {
         x = pos_x;
         y = pos_y;
@@ -40,7 +42,17 @@ class Player {
         y += py;
     }
     public void shoot(){
-        proj_list.add(new Green_Laser(x, y - 100, context));
+        t += 1;
+        if (t % 20 == 0)
+            proj_list.add(new Green_Laser(x, y - 100, context));
+        if (t % 80 == 0)
+            proj_list.add(new Blue_Laser(x, y - 100, context));
+        if (t % 20 == 0)
+            proj_list.add(new Red_Laser(x, y - 100, context));
+        if (t % 20 == 0)
+            proj_list.add(new Purple_Laser(x, y - 100, context));
+        if (t == 160)
+            t = 0;
     }
 }
 
@@ -52,6 +64,7 @@ class P_Projectile {
     float angle = -90;
     Bitmap sprite;
     Context context;
+    Random ran = new Random();
     public P_Projectile(float pos_x, float pos_y, Context cxt) {
         x = pos_x;
         y = pos_y;
@@ -72,6 +85,44 @@ class Green_Laser extends P_Projectile{
         damage = 3;
         speed = 10;
         sprite = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_green_laser);
+    }
+
+    public void action() {
+        super.action();
+    }
+}
+class Blue_Laser extends P_Projectile{
+    public Blue_Laser(float pos_x, float pos_y, Context cxt) {
+        super(pos_x, pos_y, cxt);
+        damage = 30;
+        speed = 3;
+        sprite = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_blue_laser);
+    }
+
+    public void action() {
+        super.action();
+    }
+}
+class Red_Laser extends P_Projectile{
+    public Red_Laser(float pos_x, float pos_y, Context cxt) {
+        super(pos_x, pos_y, cxt);
+        damage = 3;
+        speed = 10;
+        sprite = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_red_laser);
+    }
+
+    public void action() {
+        super.action();
+        x += (ran.nextFloat() - 0.5) * 50;
+    }
+}
+class Purple_Laser extends P_Projectile{
+    public Purple_Laser(float pos_x, float pos_y, Context cxt) {
+        super(pos_x, pos_y, cxt);
+        damage = 3;
+        speed = 10;
+        sprite = BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_purple_laser);
+        angle = -135 + 90 * ran.nextInt(2);
     }
 
     public void action() {
@@ -100,16 +151,12 @@ public class LogicThread extends Thread{
         int t = 0;
         while (running) {
             try {
-                if (t == 0)
                 player.shoot();
 
                 player.proj_list.forEach((n) -> n.update());
-                player.proj_list.removeIf((n) -> (n.x < 0 || n.y < 0 || n.x >
-                        Resources.getSystem().getDisplayMetrics().widthPixels ||
-                        n.y > Resources.getSystem().getDisplayMetrics().heightPixels));
-                t += 1;
-                if (t == 20)
-                    t = 0;
+                player.proj_list.removeIf((n) -> (n.x < -10 || n.y < -10 || n.x >
+                        Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
+                        n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
                 Thread.sleep(10);
             }
             catch (Exception e) {

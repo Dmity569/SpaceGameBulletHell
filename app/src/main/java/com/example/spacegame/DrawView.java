@@ -1,6 +1,7 @@
 package com.example.spacegame;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
@@ -52,7 +53,15 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
             case MotionEvent.ACTION_MOVE:
                 logicThread.player.setPos(e.getX() - x, e.getY() - y);
                 x = e.getX();
+                if (x < 0)
+                    x = 0;
+                if (x > Resources.getSystem().getDisplayMetrics().widthPixels)
+                    x = Resources.getSystem().getDisplayMetrics().widthPixels;
                 y = e.getY();
+                if (y < 0)
+                    y = 0;
+                if (y > Resources.getSystem().getDisplayMetrics().heightPixels)
+                    y = Resources.getSystem().getDisplayMetrics().heightPixels;
                 break;
             default:
                 break;
