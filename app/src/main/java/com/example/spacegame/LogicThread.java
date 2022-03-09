@@ -6,9 +6,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.provider.MediaStore.Audio;
 
 import androidx.annotation.RequiresApi;
 
@@ -18,6 +20,8 @@ import java.util.Hashtable;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
+
+
 
 class Player {
     float x;
@@ -41,6 +45,16 @@ class Player {
     }
     public void shoot(){
         proj_list.add(new Green_Laser(x, y - 100, context));
+        Log.d("Test1", "Test2");
+        MediaPlayer mp;
+        mp = MediaPlayer.create(context.getApplicationContext(), R.raw.simple_shoot);
+        mp.setLooping(true);
+        mp.seekTo(0);
+        mp.setVolume(0.5f,0.5f);
+        mp.start();
+        int totltime = mp.getDuration();
+        Log.d("Test3", "Test4");
+
     }
 }
 
@@ -102,6 +116,7 @@ public class LogicThread extends Thread{
             try {
                 if (t == 0)
                 player.shoot();
+
 
                 player.proj_list.forEach((n) -> n.update());
                 player.proj_list.removeIf((n) -> (n.x < 0 || n.y < 0 || n.x >
