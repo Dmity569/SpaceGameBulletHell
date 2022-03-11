@@ -48,7 +48,6 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
             case MotionEvent.ACTION_DOWN:
                 x = e.getX();
                 y = e.getY();
-                logicThread.player.health -= 10;
                 break;
             case MotionEvent.ACTION_MOVE:
                 logicThread.player.setPos(e.getX() - x, e.getY() - y);

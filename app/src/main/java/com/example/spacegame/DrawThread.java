@@ -51,6 +51,13 @@ public class DrawThread extends Thread {
                     canvas.drawColor(Color.parseColor("#2e222e"));
 //
 //                    canvas.drawCircle(x, y, 50, paint);
+                    logicThread.player.enemy_list.forEach((n) -> {
+                            canvas.drawBitmap(n.sprite, n.x, n.y, paint);
+                            paint.setColor(Color.RED);
+                            canvas.drawRect(n.x - 5, n.y - 5, n.x + 150, n.y, paint);
+                            paint.setColor(Color.GREEN);
+                            canvas.drawRect(n.x - 5, n.y - 5, (n.x + 150) * (n.health / n.max_health), n.y, paint);
+                    });
                     logicThread.player.proj_list.forEach((n) ->
                         canvas.drawBitmap(n.sprite, n.x, n.y, paint));
                     canvas.drawBitmap(logicThread.player.sprite, logicThread.player.x - 36, logicThread.player.y - 45, paint);
