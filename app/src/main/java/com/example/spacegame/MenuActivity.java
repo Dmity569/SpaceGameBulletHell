@@ -23,6 +23,17 @@ public class MenuActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        Button creators = findViewById(R.id.creators);
+        creators.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MenuActivity.this, CreatorsActivity.class);
+                startActivity(i);
+            }
+        });
+
+
 //        setContentView(new MyDraw(this));
     }
 }
