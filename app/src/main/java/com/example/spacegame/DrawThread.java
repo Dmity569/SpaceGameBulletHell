@@ -48,21 +48,24 @@ public class DrawThread extends Thread {
             Canvas canvas = surfaceHolder.lockCanvas();
             if (canvas != null) {
                 try {
-                    canvas.drawColor(Color.parseColor("#2e222e"));
+                    if (logicThread.gameover == false) {
+                        canvas.drawColor(Color.parseColor("#2e222e"));
 //
 //                    canvas.drawCircle(x, y, 50, paint);
-                    logicThread.player.enemy_list.forEach((n) -> {
+                        logicThread.player.enemy_list.forEach((n) -> {
                             canvas.drawBitmap(n.sprite, n.x, n.y, paint);
                             paint.setColor(Color.RED);
                             canvas.drawRect(n.x - 5, n.y - 5, n.x + 150, n.y, paint);
                             paint.setColor(Color.GREEN);
-                            canvas.drawRect(n.x - 5, n.y - 5, (n.x + 150) * (n.health / n.max_health), n.y, paint);
-                    });
-                    logicThread.player.proj_list.forEach((n) ->
-                        canvas.drawBitmap(n.sprite, n.x, n.y, paint));
-                    canvas.drawBitmap(logicThread.player.sprite, logicThread.player.x - 36, logicThread.player.y - 45, paint);
-                    drawUI(canvas, paint);
-                    Thread.sleep(10);
+                            canvas.drawRect(n.x - 5, n.y - 5, n.x + (150 * (n.health / n.max_health)), n.y, paint);
+                        });
+                        logicThread.player.proj_list.forEach((n) ->
+                                canvas.drawBitmap(n.sprite, n.x, n.y, paint));
+                        canvas.drawBitmap(logicThread.player.sprite, logicThread.player.x - 36, logicThread.player.y - 45, paint);
+                        drawUI(canvas, paint);
+                        Thread.sleep(10);
+                    }
+
                     // рисование на canvas
                 } catch (Exception e) {
                     e.printStackTrace();

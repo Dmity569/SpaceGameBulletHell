@@ -21,6 +21,5 @@ public class LevelActivity extends AppCompatActivity {
         Toast.makeText(LevelActivity.this, "Level - " + Integer.toString(level_id + 1),
                 Toast.LENGTH_SHORT).show();
     }
-
 }
 

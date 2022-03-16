@@ -55,8 +55,14 @@ class Player {
             // proj_list.add(new Green_Laser(x, y - 100, context));
         // if (t % 80 == 0)
             // proj_list.add(new Blue_Laser(x, y - 100, context));
-        if (t % 20 == 0)
-            proj_list.add(new Red_Laser(x, y - 100, this));
+        if (t % 80 == 0) {
+            proj_list.add(new Red_Laser(x, y - 110, this));
+            proj_list.add(new Red_Laser(x - 10, y - 90, this));
+            proj_list.add(new Red_Laser(x + 10, y - 80, this));
+            proj_list.add(new Red_Laser(x, y - 125, this));
+            proj_list.add(new Red_Laser(x - 25, y - 100, this));
+            proj_list.add(new Red_Laser(x + 25, y - 120, this));
+        }
         // if (t % 20 == 0)
             // proj_list.add(new Purple_Laser(x, y - 100, context));
         if (t == 160)
@@ -67,8 +73,6 @@ class Player {
 class Entity {
     float x;
     float y;
-    int atk;
-    int e_atk;
     float speed;
     float angle = -90;
     Bitmap sprite;
@@ -89,6 +93,8 @@ class Entity {
     }
 }
 class P_Projectile extends Entity {
+    int atk;
+    int e_atk;
 
     public P_Projectile(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
@@ -161,10 +167,14 @@ class Purple_Laser extends P_Projectile{
 }
 
 class Enemy extends Entity {
+    int atk = 1;
+    int e_atk = 1;
     int def = 1;
     int e_def = 1;
     float health = 30;
     float max_health = 30;
+    float target_x = 0;
+    float target_y = 0;
     boolean immortal = false;
     public Enemy(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
@@ -183,17 +193,42 @@ class Pirate extends Enemy {
         e_atk = 0;
         speed = 10;
         sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.enemy_pure_trident);
+        target_y = 100 + 50 * ran.nextInt(10);
     }
     @Override
     public void action() {
         super.action();
-        if (y >= 400)
+        if (y >= target_y)
             if (angle == 90)
                 angle = 180 * ran.nextInt(2);
-            else if (angle == 0 && x >= Resources.getSystem().getDisplayMetrics().widthPixels - 100)
-                angle = 180;
-            else if (angle == 180 && x <= 0)
-                angle = 0;
+            else if (angle < 90 && x >= Resources.getSystem().getDisplayMetrics().widthPixels - 100) {
+                angle = 175;
+            }
+            else if (angle >= 90 && x <= 0) {
+                angle = 5;
+            }
+    }
+}
+
+class E_Projectile extends Entity {
+    int atk;
+    int e_atk;
+    public E_Projectile(float pos_x, float pos_y, Player plr) {
+        super(pos_x, pos_y, plr);
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        if (LogicThread.distance(x, y, player.x + 50, player.y + 50) <= 50) {
+            player.health -= ((atk / player.def) + (e_atk / player.e_def));
+        }
+    }
+}
+
+class Bomb extends E_Projectile {
+    public Bomb(float pos_x, float pos_y, Player plr) {
+        super(pos_x, pos_y, plr);
     }
 }
 public class LogicThread extends Thread {
@@ -203,6 +238,7 @@ public class LogicThread extends Thread {
     private volatile boolean running = true;//флаг для остановки потока
     public SoundPool sp;
     public Dictionary<String, Integer> sounds = new Hashtable<>();
+    public boolean gameover = false;
 
     public static double distance(float x1, float y1, float x2, float y2) {
         return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
@@ -225,8 +261,9 @@ public class LogicThread extends Thread {
         int t = 0;
         while (running) {
             try {
+                if (gameover == false) {
                 player.shoot();
-                if (t % 20 == 0)
+                if (t % 80 == 0)
                     sp.play(sounds.get("laser"), 1, 1, 0, 0, 1);
 
                 if (player.cd > 0)
@@ -238,7 +275,8 @@ public class LogicThread extends Thread {
                 player.proj_list.removeIf((n) -> (n.x < -10 || n.y < -10 || n.x >
                         Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
                         n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
-                player.enemy_list.removeIf((n) -> n.health <= 0);
+                player.enemy_list.removeIf((n) -> (n.health <= 0 ||
+                        n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 100));
 
                 t += 1;
                 if (t == 100) {
@@ -248,7 +286,10 @@ public class LogicThread extends Thread {
                             Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 50,
                             0, player));
                 }
+                if (player.health <= 0)
+                    gameover = true;
                 Thread.sleep(10);
+                }
             }
             catch (Exception e) {
                     e.printStackTrace();
