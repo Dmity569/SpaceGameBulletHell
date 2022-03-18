@@ -53,15 +53,35 @@ public class DrawThread extends Thread {
 //
 //                    canvas.drawCircle(x, y, 50, paint);
                         logicThread.player.enemy_list.forEach((n) -> {
-                            canvas.drawBitmap(n.sprite, n.x, n.y, paint);
+                            canvas.drawBitmap(n.sprite, n.x - n.sprite.getWidth() / 2, n.y - n.sprite.getHeight() / 2, paint);
                             paint.setColor(Color.RED);
-                            canvas.drawRect(n.x - 5, n.y - 5, n.x + 150, n.y, paint);
+                            canvas.drawRect(n.x - n.sprite.getWidth() / 2 - 5,
+                                    n.y - n.sprite.getHeight() / 2 - 5, n.x + n.sprite.getWidth() / 2,
+                                    n.y - n.sprite.getHeight() / 2, paint);
                             paint.setColor(Color.GREEN);
-                            canvas.drawRect(n.x - 5, n.y - 5, n.x + (150 * (n.health / n.max_health)), n.y, paint);
+                            canvas.drawRect(n.x - n.sprite.getWidth() / 2 - 5,
+                                    n.y - n.sprite.getHeight() / 2 - 5,
+                                    n.x - n.sprite.getWidth() / 2 + (n.sprite.getWidth() * (n.health / n.max_health)),
+                                    n.y - n.sprite.getHeight() / 2, paint);
+                        });
+                        logicThread.player.boss_list.forEach((n) -> {
+                            canvas.drawBitmap(n.sprite, n.x - n.sprite.getWidth() / 2, n.y - n.sprite.getHeight() / 2, paint);
+                            paint.setColor(Color.RED);
+                            canvas.drawRect(n.x - n.sprite.getWidth() / 2 - 5,
+                                    n.y - n.sprite.getHeight() / 2 - 5, n.x + n.sprite.getWidth() / 2,
+                                    n.y - n.sprite.getHeight() / 2 + 15, paint);
+                            paint.setColor(Color.GREEN);
+                            canvas.drawRect(n.x - n.sprite.getWidth() / 2 - 5,
+                                    n.y - n.sprite.getHeight() / 2 - 5,
+                                    n.x - n.sprite.getWidth() / 2 + (n.sprite.getWidth() * (n.health / n.max_health)),
+                                    n.y - n.sprite.getHeight() / 2 + 15, paint);
                         });
                         logicThread.player.proj_list.forEach((n) ->
-                                canvas.drawBitmap(n.sprite, n.x, n.y, paint));
-                        canvas.drawBitmap(logicThread.player.sprite, logicThread.player.x - 36, logicThread.player.y - 45, paint);
+                                canvas.drawBitmap(n.sprite, n.x - n.sprite.getWidth() / 2, n.y - n.sprite.getHeight() / 2, paint));
+                        logicThread.player.e_proj_list.forEach((n) ->
+                                canvas.drawBitmap(n.sprite, n.x - n.sprite.getWidth() / 2, n.y - n.sprite.getHeight() / 2, paint));
+                        canvas.drawBitmap(logicThread.player.sprite, logicThread.player.x - logicThread.player.sprite.getWidth() / 2,
+                                logicThread.player.y - logicThread.player.sprite.getHeight() / 2, paint);
                         drawUI(canvas, paint);
                         Thread.sleep(10);
                     }

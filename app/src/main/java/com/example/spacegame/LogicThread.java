@@ -31,12 +31,14 @@ class Player {
     float health;
     Bitmap sprite;
     ArrayList<Enemy> enemy_list = new ArrayList(50);
+    ArrayList<Enemy> boss_list = new ArrayList(3);
     ArrayList<P_Projectile> proj_list = new ArrayList(50);
+    ArrayList<E_Projectile> e_proj_list = new ArrayList(50);
     Context context;
     int t = 0;
     int cd = 0;
-    int def = 10;
-    int e_def = 1;
+    float def = 10;
+    float e_def = 1;
     public Player(float pos_x, float pos_y, int hp, Bitmap bitmap, Context cxt) {
         x = pos_x;
         y = pos_y;
@@ -93,8 +95,8 @@ class Entity {
     }
 }
 class P_Projectile extends Entity {
-    int atk;
-    int e_atk;
+    float atk;
+    float e_atk;
 
     public P_Projectile(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
@@ -104,6 +106,11 @@ class P_Projectile extends Entity {
     public void update() {
         super.update();
         player.enemy_list.forEach((n) -> {
+            if (LogicThread.distance(x, y, n.x + 50, n.y + 50) <= 50) {
+                n.health -= ((atk / n.def) + (e_atk / n.e_def));
+            }
+        });
+        player.boss_list.forEach((n) -> {
             if (LogicThread.distance(x, y, n.x + 50, n.y + 50) <= 50) {
                 n.health -= ((atk / n.def) + (e_atk / n.e_def));
             }
@@ -167,14 +174,13 @@ class Purple_Laser extends P_Projectile{
 }
 
 class Enemy extends Entity {
-    int atk = 1;
-    int e_atk = 1;
-    int def = 1;
-    int e_def = 1;
+    float def = 1;
+    float e_def = 1;
     float health = 30;
     float max_health = 30;
     float target_x = 0;
     float target_y = 0;
+    int t = 0;
     boolean immortal = false;
     public Enemy(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
@@ -183,14 +189,16 @@ class Enemy extends Entity {
 
     public void action() {
         super.action();
+        shoot();
+    }
+
+    public void shoot() {
     }
 }
 
 class Pirate extends Enemy {
     public Pirate(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
-        atk = 10;
-        e_atk = 0;
         speed = 10;
         sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.enemy_pure_trident);
         target_y = 100 + 50 * ran.nextInt(10);
@@ -208,11 +216,53 @@ class Pirate extends Enemy {
                 angle = 5;
             }
     }
+
+    @Override
+    public void shoot() {
+        super.shoot();
+        t += 1;
+        if (t % 40 == 0) {
+            player.e_proj_list.add(new Death_Laser(x, y, player, 65));
+            player.e_proj_list.add(new Death_Laser(x, y, player, 90));
+            player.e_proj_list.add(new Death_Laser(x, y, player, 115));
+        }
+        if (t == 160)
+            t = 0;
+    }
+}
+
+
+class Death_Skull extends Enemy {
+
+    public Death_Skull(float pos_x, float pos_y, Player plr) {
+        super(pos_x, pos_y, plr);
+        def = 20;
+        e_def = 20;
+        speed = 1;
+        health = 350;
+        max_health = 350;
+        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.boss_death_skull);
+        target_y = 200;
+    }
+    @Override
+    public void action() {
+        super.action();
+        if (y >= target_y) {
+            if (target_y == 200) {
+                target_y = -100;
+                speed = 3;
+                angle = 0;
+            }
+            angle += 1;
+            if (angle >= 180)
+                angle -= 360;
+        }
+    }
 }
 
 class E_Projectile extends Entity {
-    int atk;
-    int e_atk;
+    float atk = 1;
+    float e_atk = 1;
     public E_Projectile(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
     }
@@ -229,6 +279,16 @@ class E_Projectile extends Entity {
 class Bomb extends E_Projectile {
     public Bomb(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
+    }
+}
+class Death_Laser extends E_Projectile {
+    public Death_Laser(float pos_x, float pos_y, Player plr, int ang) {
+        super(pos_x, pos_y, plr);
+        atk = 10;
+        e_atk = 0;
+        speed = 12;
+        angle = ang;
+        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_green_laser);
     }
 }
 public class LogicThread extends Thread {
@@ -259,6 +319,7 @@ public class LogicThread extends Thread {
     @Override
     public void run() {
         int t = 0;
+        int spawns = 0;
         while (running) {
             try {
                 if (gameover == false) {
@@ -270,21 +331,35 @@ public class LogicThread extends Thread {
                     player.cd -= 1;
 
                 player.proj_list.forEach((n) -> n.update());
+                player.e_proj_list.forEach((n) -> n.update());
                 player.enemy_list.forEach((n) -> n.update());
+                player.boss_list.forEach((n) -> n.update());
 
                 player.proj_list.removeIf((n) -> (n.x < -10 || n.y < -10 || n.x >
                         Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
                         n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
+                player.e_proj_list.removeIf((n) -> (n.x < -10 || n.y < -10 || n.x >
+                        Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
+                        n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
                 player.enemy_list.removeIf((n) -> (n.health <= 0 ||
                         n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 100));
+                player.boss_list.removeIf((n) -> (n.health <= 0));
 
                 t += 1;
                 if (t == 100) {
                     t = 0;
-                    if (player.enemy_list.size() <= 4)
-                    player.enemy_list.add(new Pirate(
-                            Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 50,
-                            0, player));
+                    if (player.enemy_list.size() <= 4 & spawns < 8) {
+                        player.enemy_list.add(new Pirate(
+                                Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 50,
+                                0, player));
+                        spawns += 1;
+                    }
+                    else if (spawns == 8) {
+                        player.boss_list.add(new Death_Skull(
+                                Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 100,
+                                0, player));
+                        spawns += 1;
+                    }
                 }
                 if (player.health <= 0)
                     gameover = true;
