@@ -33,6 +33,16 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
+        Button settings = findViewById(R.id.settings);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MenuActivity.this, SettinsActivity.class);
+                startActivity(i);
+            }
+        });
+
+
 
 //        setContentView(new MyDraw(this));
     }
