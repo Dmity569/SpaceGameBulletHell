@@ -8,9 +8,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.provider.MediaStore.Audio;
 
 import androidx.annotation.RequiresApi;
 
@@ -329,6 +331,7 @@ public class LogicThread extends Thread {
 
                 if (player.cd > 0)
                     player.cd -= 1;
+
 
                 player.proj_list.forEach((n) -> n.update());
                 player.e_proj_list.forEach((n) -> n.update());
