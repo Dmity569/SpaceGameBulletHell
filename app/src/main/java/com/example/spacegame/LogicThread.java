@@ -22,6 +22,7 @@ import java.util.Random;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
+import static java.lang.Math.toDegrees;
 import static java.lang.Math.toRadians;
 
 class Player {
@@ -77,9 +78,12 @@ class Entity {
     float y;
     float speed;
     float angle = -90;
+    ArrayList<Bitmap> anim_sprite = new ArrayList(10);
+    int anim_n = 0;
     Bitmap sprite;
     Player player;
     Random ran = new Random();
+    boolean dest = false;
     public Entity(float pos_x, float pos_y, Player plr) {
         x = pos_x;
         y = pos_y;
@@ -91,6 +95,11 @@ class Entity {
     }
 
     public void update() {
+        if (!anim_sprite.isEmpty()) {
+            sprite = anim_sprite.get(anim_n);
+            anim_n += 1;
+            anim_n %= anim_sprite.size();
+        }
         action();
     }
 }
@@ -258,6 +267,18 @@ class Death_Skull extends Enemy {
                 angle -= 360;
         }
     }
+    @Override
+    public void shoot() {
+        super.shoot();
+        t += 1;
+        if (t % 160 == 0) {
+            player.e_proj_list.add(new Bomb(x, y, player, 45));
+            player.e_proj_list.add(new Bomb(x, y, player, 90));
+            player.e_proj_list.add(new Bomb(x, y, player, 135));
+        }
+        if (t == 160)
+            t = 0;
+    }
 }
 
 class E_Projectile extends Entity {
@@ -265,6 +286,7 @@ class E_Projectile extends Entity {
     float e_atk = 1;
     public E_Projectile(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
+        angle = 90;
     }
 
     @Override
@@ -277,12 +299,63 @@ class E_Projectile extends Entity {
 }
 
 class Bomb extends E_Projectile {
-    public Bomb(float pos_x, float pos_y, Player plr) {
+    int p_ang;
+    public Bomb(float pos_x, float pos_y, Player plr, float ang) {
         super(pos_x, pos_y, plr);
+        atk = 0;
+        e_atk = 0;
+        angle = ang;
+        speed = 10;
+        p_ang = (int) toDegrees(Math.atan2(plr.x - pos_x, plr.y - pos_y));
+        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb);
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_1));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_1));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_1));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_1));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_2));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_2));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_2));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_2));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_3));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_3));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_3));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_3));
+    }
+
+    public void action() {
+        super.action();
+        speed -= 0.5;
+        if (speed == 0) {
+            dest = true;
+            for (int i = 0; i < 16; i += 1)
+            player.e_proj_list.add(new Bomb_Frag(x, y, player, (float) (p_ang + 22.5 * i)));
+        }
+    }
+}
+class Bomb_Frag extends E_Projectile {
+    public Bomb_Frag(float pos_x, float pos_y, Player plr, float ang) {
+        super(pos_x, pos_y, plr);
+        atk = 40;
+        e_atk = 5;
+        speed = 15;
+        angle = ang;
+        while (angle > 180)
+            angle -= 360;
+        while (angle < -180)
+            angle += 360;
+        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_frag);
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_frag));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_frag_1));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_frag_2));
+        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_frag_3));
     }
 }
 class Death_Laser extends E_Projectile {
-    public Death_Laser(float pos_x, float pos_y, Player plr, int ang) {
+    public Death_Laser(float pos_x, float pos_y, Player plr, float ang) {
         super(pos_x, pos_y, plr);
         atk = 10;
         e_atk = 0;
@@ -338,7 +411,7 @@ public class LogicThread extends Thread {
                 player.proj_list.removeIf((n) -> (n.x < -10 || n.y < -10 || n.x >
                         Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
                         n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
-                player.e_proj_list.removeIf((n) -> (n.x < -10 || n.y < -10 || n.x >
+                player.e_proj_list.removeIf((n) -> (n.dest ||n.x < -10 || n.y < -10 || n.x >
                         Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
                         n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
                 player.enemy_list.removeIf((n) -> (n.health <= 0 ||
