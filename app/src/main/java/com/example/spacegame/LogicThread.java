@@ -35,22 +35,36 @@ class Player {
     ArrayList<Enemy> boss_list = new ArrayList(3);
     ArrayList<P_Projectile> proj_list = new ArrayList(50);
     ArrayList<E_Projectile> e_proj_list = new ArrayList(50);
+    Dictionary<String, Bitmap> atlas = new Hashtable<>();
     Context context;
     int t = 0;
     int cd = 0;
     float def = 10;
     float e_def = 1;
-    public Player(float pos_x, float pos_y, int hp, Bitmap bitmap, Context cxt) {
+    public Player(float pos_x, float pos_y, int hp, Context cxt) {
+        load_atlas();
         x = pos_x;
         y = pos_y;
         max_health = hp;
         health = hp;
-        sprite = bitmap;
+        sprite = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_texture);
         context = cxt;
     }
     public void setPos(float px, float py) {
         x += px;
         y += py;
+        if (x > Resources.getSystem().getDisplayMetrics().widthPixels - sprite.getWidth() / 2) {
+            x = Resources.getSystem().getDisplayMetrics().widthPixels - sprite.getWidth() / 2;
+        }
+        if (x < sprite.getWidth() / 2){
+            x = sprite.getWidth() / 2;
+        }
+        if (y > Resources.getSystem().getDisplayMetrics().heightPixels - sprite.getHeight() / 2) {
+            y = Resources.getSystem().getDisplayMetrics().heightPixels - sprite.getHeight() / 2;
+        }
+        if (y < sprite.getHeight() / 2){
+            y = sprite.getHeight() / 2;
+        }
     }
     public void shoot(){
         t += 1;
@@ -70,6 +84,23 @@ class Player {
             // proj_list.add(new Purple_Laser(x, y - 100, context));
         if (t == 160)
             t = 0;
+    }
+    private void load_atlas() {
+        atlas.put("player", BitmapFactory.decodeResource(context.getResources(), R.drawable.player_texture));
+        atlas.put("blue_laser", BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_blue_laser));
+        atlas.put("green_laser", BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_green_laser));
+        atlas.put("red_laser", BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_red_laser));
+        atlas.put("purple_laser", BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_purple_laser));
+        atlas.put("bomb", BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_bomb));
+        atlas.put("bomb_1", BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_bomb_1));
+        atlas.put("bomb_2", BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_bomb_2));
+        atlas.put("bomb_3", BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_bomb_3));
+        atlas.put("bomb", BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_bomb_frag));
+        atlas.put("bomb_frag_1", BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_bomb_frag_1));
+        atlas.put("bomb_frag_2", BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_bomb_frag_2));
+        atlas.put("bomb_frag_3", BitmapFactory.decodeResource(context.getResources(), R.drawable.projectile_bomb_frag_3));
+        atlas.put("pure_trident", BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_pure_trident));
+        atlas.put("death_skull", BitmapFactory.decodeResource(context.getResources(), R.drawable.boss_death_skull));
     }
 }
 
@@ -102,6 +133,13 @@ class Entity {
         }
         action();
     }
+
+    public void generate_anim(int length, Bitmap... args) {
+        for (Bitmap arg: args) {
+            for(int i = 0; i < length; i++)
+                anim_sprite.add(arg);
+        }
+    }
 }
 class P_Projectile extends Entity {
     float atk;
@@ -133,7 +171,7 @@ class Green_Laser extends P_Projectile{
         atk = 3;
         e_atk = 0;
         speed = 10;
-        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_green_laser);
+        sprite = plr.atlas.get("green_laser");
     }
 
     public void action() {
@@ -146,7 +184,7 @@ class Blue_Laser extends P_Projectile{
         atk = 30;
         e_atk = 0;
         speed = 3;
-        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_blue_laser);
+        sprite = plr.atlas.get("blue_laser");
     }
 
     public void action() {
@@ -159,7 +197,7 @@ class Red_Laser extends P_Projectile{
         atk = 3;
         e_atk = 0;
         speed = 10;
-        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_red_laser);
+        sprite = plr.atlas.get("red_laser");
     }
 
     public void action() {
@@ -173,7 +211,7 @@ class Purple_Laser extends P_Projectile{
         atk = 9;
         e_atk = 0;
         speed = 10;
-        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_purple_laser);
+        sprite = plr.atlas.get("purple_laser");
         angle = -135 + 90 * ran.nextInt(2);
     }
 
@@ -209,7 +247,7 @@ class Pirate extends Enemy {
     public Pirate(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
         speed = 10;
-        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.enemy_pure_trident);
+        sprite = plr.atlas.get("pure_trident");
         target_y = 100 + 50 * ran.nextInt(10);
     }
     @Override
@@ -250,7 +288,7 @@ class Death_Skull extends Enemy {
         speed = 1;
         health = 350;
         max_health = 350;
-        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.boss_death_skull);
+        sprite = plr.atlas.get("death_skull");
         target_y = 200;
     }
     @Override
@@ -307,23 +345,9 @@ class Bomb extends E_Projectile {
         angle = ang;
         speed = 10;
         p_ang = (int) toDegrees(Math.atan2(plr.x - pos_x, plr.y - pos_y));
-        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb);
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_1));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_1));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_1));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_1));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_2));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_2));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_2));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_2));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_3));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_3));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_3));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_3));
+        sprite = plr.atlas.get("bomb");
+        generate_anim(6, plr.atlas.get("bomb"), plr.atlas.get("bomb_1"),
+                plr.atlas.get("bomb_2"), plr.atlas.get("bomb_3"));
     }
 
     public void action() {
@@ -347,11 +371,9 @@ class Bomb_Frag extends E_Projectile {
             angle -= 360;
         while (angle < -180)
             angle += 360;
-        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_frag);
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_frag));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_frag_1));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_frag_2));
-        anim_sprite.add(BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_bomb_frag_3));
+        sprite = plr.atlas.get("bomb_frag");
+        generate_anim(6, plr.atlas.get("bomb_frag"), plr.atlas.get("bomb_frag_1"),
+                plr.atlas.get("bomb_frag_2"), plr.atlas.get("bomb_frag_3"));
     }
 }
 class Death_Laser extends E_Projectile {
@@ -361,7 +383,7 @@ class Death_Laser extends E_Projectile {
         e_atk = 0;
         speed = 12;
         angle = ang;
-        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_green_laser);
+        sprite = plr.atlas.get("green_laser");
     }
 }
 public class LogicThread extends Thread {
@@ -381,7 +403,7 @@ public class LogicThread extends Thread {
     public LogicThread(Context context){
         sp = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
         sounds.put("laser", sp.load(context, R.raw.laser, 1));
-        player = new Player(450, 1400, 100, BitmapFactory.decodeResource(context.getResources(), R.drawable.player_texture), context);
+        player = new Player(450, 1400, 100, context);
     }
 
     public void requestStop() {
