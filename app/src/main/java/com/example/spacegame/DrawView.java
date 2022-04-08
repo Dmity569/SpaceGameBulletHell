@@ -15,6 +15,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
     private LogicThread logicThread;
     float x;
     float y;
+    int level_id;
 
     /*
     @Override
@@ -69,9 +70,10 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
 
-    public DrawView(Context context) {
+    public DrawView(Context context, int id) {
         super(context);
         getHolder().addCallback(this);
+        level_id = id;
     }
 
 
@@ -82,6 +84,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
         logicThread.start();
         drawThread.start();
         logicThread.drawThread = drawThread;
+        logicThread.drawView = this;
         drawThread.logicThread = logicThread;
     }
 

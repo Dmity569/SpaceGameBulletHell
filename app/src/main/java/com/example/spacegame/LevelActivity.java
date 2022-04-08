@@ -11,15 +11,18 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.prefs.Preferences;
+
 public class LevelActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(new DrawView(this));
         int level_id = getIntent().getExtras().getInt("level_id");
+        setContentView(new DrawView(this, level_id));
         Toast.makeText(LevelActivity.this, "Level - " + Integer.toString(level_id + 1),
                 Toast.LENGTH_SHORT).show();
+
     }
 }
 

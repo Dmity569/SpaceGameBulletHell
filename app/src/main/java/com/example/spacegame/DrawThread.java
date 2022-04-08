@@ -80,11 +80,14 @@ public class DrawThread extends Thread {
                                 canvas.drawBitmap(n.sprite, n.x - n.sprite.getWidth() / 2, n.y - n.sprite.getHeight() / 2, paint));
                         logicThread.player.e_proj_list.forEach((n) ->
                                 canvas.drawBitmap(n.sprite, n.x - n.sprite.getWidth() / 2, n.y - n.sprite.getHeight() / 2, paint));
+                        logicThread.player.item_list.forEach((n) ->
+                                canvas.drawBitmap(n.sprite, n.x - n.sprite.getWidth() / 2, n.y - n.sprite.getHeight() / 2, paint));
                         canvas.drawBitmap(logicThread.player.sprite, logicThread.player.x - logicThread.player.sprite.getWidth() / 2,
                                 logicThread.player.y - logicThread.player.sprite.getHeight() / 2, paint);
                         drawUI(canvas, paint);
-                        Thread.sleep(10);
                     }
+                        Thread.sleep(10);
+
 
                     // рисование на canvas
                 } catch (Exception e) {
