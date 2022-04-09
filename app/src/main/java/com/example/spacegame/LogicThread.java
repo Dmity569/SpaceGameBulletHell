@@ -52,6 +52,19 @@ class Player {
     public void setPos(float px, float py) {
         x += px;
         y += py;
+        if (x > Resources.getSystem().getDisplayMetrics().widthPixels - 75) {
+            x = Resources.getSystem().getDisplayMetrics().widthPixels - 75;
+        }
+        if (x < 75){
+            x = 75;
+        }
+        if (y > Resources.getSystem().getDisplayMetrics().heightPixels - 110) {
+            y = Resources.getSystem().getDisplayMetrics().heightPixels - 110;
+        }
+        if (y < 110){
+            y = 110;
+        }
+
     }
     public void shoot(){
         t += 1;
