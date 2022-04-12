@@ -1,6 +1,7 @@
 package com.example.spacegame;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -41,6 +42,7 @@ class Player {
     int cd = 0;
     float def = 10;
     float e_def = 1;
+
     public Player(float pos_x, float pos_y, int hp, Bitmap bitmap, Context cxt) {
         x = pos_x;
         y = pos_y;
@@ -49,16 +51,18 @@ class Player {
         sprite = bitmap;
         context = cxt;
     }
+
     public void setPos(float px, float py) {
         x += px;
         y += py;
     }
-    public void shoot(){
+
+    public void shoot() {
         t += 1;
         // if (t % 20 == 0)
-            // proj_list.add(new Green_Laser(x, y - 100, context));
+        // proj_list.add(new Green_Laser(x, y - 100, context));
         // if (t % 80 == 0)
-            // proj_list.add(new Blue_Laser(x, y - 100, context));
+        // proj_list.add(new Blue_Laser(x, y - 100, context));
         if (t % 80 == 0) {
             proj_list.add(new Red_Laser(x, y - 110, this));
             proj_list.add(new Red_Laser(x - 10, y - 90, this));
@@ -68,7 +72,7 @@ class Player {
             proj_list.add(new Red_Laser(x + 25, y - 120, this));
         }
         // if (t % 20 == 0)
-            // proj_list.add(new Purple_Laser(x, y - 100, context));
+        // proj_list.add(new Purple_Laser(x, y - 100, context));
         if (t == 160)
             t = 0;
     }
@@ -82,11 +86,13 @@ class Entity {
     Bitmap sprite;
     Player player;
     Random ran = new Random();
+
     public Entity(float pos_x, float pos_y, Player plr) {
         x = pos_x;
         y = pos_y;
         player = plr;
     }
+
     public void action() {
         x += speed * cos(toRadians(angle));
         y += speed * sin(toRadians(angle));
@@ -96,6 +102,7 @@ class Entity {
         action();
     }
 }
+
 class P_Projectile extends Entity {
     float atk;
     float e_atk;
@@ -120,7 +127,8 @@ class P_Projectile extends Entity {
 
     }
 }
-class Green_Laser extends P_Projectile{
+
+class Green_Laser extends P_Projectile {
     public Green_Laser(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
         atk = 3;
@@ -133,7 +141,8 @@ class Green_Laser extends P_Projectile{
         super.action();
     }
 }
-class Blue_Laser extends P_Projectile{
+
+class Blue_Laser extends P_Projectile {
     public Blue_Laser(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
         atk = 30;
@@ -146,7 +155,8 @@ class Blue_Laser extends P_Projectile{
         super.action();
     }
 }
-class Red_Laser extends P_Projectile{
+
+class Red_Laser extends P_Projectile {
     public Red_Laser(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
         atk = 3;
@@ -160,7 +170,8 @@ class Red_Laser extends P_Projectile{
         x += (ran.nextFloat() - 0.5) * 50;
     }
 }
-class Purple_Laser extends P_Projectile{
+
+class Purple_Laser extends P_Projectile {
     public Purple_Laser(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
         atk = 9;
@@ -184,6 +195,7 @@ class Enemy extends Entity {
     float target_y = 0;
     int t = 0;
     boolean immortal = false;
+
     public Enemy(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
         angle = 90;
@@ -205,6 +217,7 @@ class Pirate extends Enemy {
         sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.enemy_pure_trident);
         target_y = 100 + 50 * ran.nextInt(10);
     }
+
     @Override
     public void action() {
         super.action();
@@ -213,8 +226,7 @@ class Pirate extends Enemy {
                 angle = 180 * ran.nextInt(2);
             else if (angle < 90 && x >= Resources.getSystem().getDisplayMetrics().widthPixels - 100) {
                 angle = 175;
-            }
-            else if (angle >= 90 && x <= 0) {
+            } else if (angle >= 90 && x <= 0) {
                 angle = 5;
             }
     }
@@ -246,6 +258,7 @@ class Death_Skull extends Enemy {
         sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.boss_death_skull);
         target_y = 200;
     }
+
     @Override
     public void action() {
         super.action();
@@ -265,6 +278,7 @@ class Death_Skull extends Enemy {
 class E_Projectile extends Entity {
     float atk = 1;
     float e_atk = 1;
+
     public E_Projectile(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
     }
@@ -283,6 +297,7 @@ class Bomb extends E_Projectile {
         super(pos_x, pos_y, plr);
     }
 }
+
 class Death_Laser extends E_Projectile {
     public Death_Laser(float pos_x, float pos_y, Player plr, int ang) {
         super(pos_x, pos_y, plr);
@@ -293,7 +308,10 @@ class Death_Laser extends E_Projectile {
         sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_green_laser);
     }
 }
+
 public class LogicThread extends Thread {
+
+    SharedPreferences mSettings;
 
     public DrawThread drawThread;
     public Player player;
@@ -307,7 +325,7 @@ public class LogicThread extends Thread {
     }
 
 
-    public LogicThread(Context context){
+    public LogicThread(Context context) {
         sp = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
         sounds.put("laser", sp.load(context, R.raw.laser, 1));
         player = new Player(450, 1400, 100, BitmapFactory.decodeResource(context.getResources(), R.drawable.player_texture), context);
@@ -317,60 +335,68 @@ public class LogicThread extends Thread {
         running = false;
     }
 
+    public SharedPreferences help_me(Context context) {
+        mSettings = context.getSharedPreferences("mysettings", Context.MODE_PRIVATE);
+        return mSettings;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void run() {
+
+        mSettings = help_me(player.context);
+
         int t = 0;
         int spawns = 0;
         while (running) {
             try {
                 if (gameover == false) {
-                player.shoot();
-                if (t % 80 == 0)
-                    sp.play(sounds.get("laser"), 1, 1, 0, 0, 1);
-
-                if (player.cd > 0)
-                    player.cd -= 1;
+                    player.shoot();
+                    if (t % 80 == 0)
 
 
-                player.proj_list.forEach((n) -> n.update());
-                player.e_proj_list.forEach((n) -> n.update());
-                player.enemy_list.forEach((n) -> n.update());
-                player.boss_list.forEach((n) -> n.update());
+                        sp.play(sounds.get("laser"), (float) (1 - (Math.log(100 - mSettings.getInt("sound", 50)) / Math.log(100))), (float) (1 - (Math.log(100 - mSettings.getInt("sound", 50)) / Math.log(100))), 0, 0, 1);
 
-                player.proj_list.removeIf((n) -> (n.x < -10 || n.y < -10 || n.x >
-                        Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
-                        n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
-                player.e_proj_list.removeIf((n) -> (n.x < -10 || n.y < -10 || n.x >
-                        Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
-                        n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
-                player.enemy_list.removeIf((n) -> (n.health <= 0 ||
-                        n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 100));
-                player.boss_list.removeIf((n) -> (n.health <= 0));
+                    if (player.cd > 0)
+                        player.cd -= 1;
 
-                t += 1;
-                if (t == 100) {
-                    t = 0;
-                    if (player.enemy_list.size() <= 4 & spawns < 8) {
-                        player.enemy_list.add(new Pirate(
-                                Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 50,
-                                0, player));
-                        spawns += 1;
+
+                    player.proj_list.forEach((n) -> n.update());
+                    player.e_proj_list.forEach((n) -> n.update());
+                    player.enemy_list.forEach((n) -> n.update());
+                    player.boss_list.forEach((n) -> n.update());
+
+                    player.proj_list.removeIf((n) -> (n.x < -10 || n.y < -10 || n.x >
+                            Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
+                            n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
+                    player.e_proj_list.removeIf((n) -> (n.x < -10 || n.y < -10 || n.x >
+                            Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
+                            n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
+                    player.enemy_list.removeIf((n) -> (n.health <= 0 ||
+                            n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 100));
+                    player.boss_list.removeIf((n) -> (n.health <= 0));
+
+                    t += 1;
+                    if (t == 100) {
+                        t = 0;
+                        if (player.enemy_list.size() <= 4 & spawns < 8) {
+                            player.enemy_list.add(new Pirate(
+                                    Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 50,
+                                    0, player));
+                            spawns += 1;
+                        } else if (spawns == 8) {
+                            player.boss_list.add(new Death_Skull(
+                                    Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 100,
+                                    0, player));
+                            spawns += 1;
+                        }
                     }
-                    else if (spawns == 8) {
-                        player.boss_list.add(new Death_Skull(
-                                Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 100,
-                                0, player));
-                        spawns += 1;
-                    }
+                    if (player.health <= 0)
+                        gameover = true;
+                    Thread.sleep(10);
                 }
-                if (player.health <= 0)
-                    gameover = true;
-                Thread.sleep(10);
-                }
-            }
-            catch (Exception e) {
-                    e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
