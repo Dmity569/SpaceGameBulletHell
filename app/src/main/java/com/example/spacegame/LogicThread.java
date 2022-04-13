@@ -31,6 +31,7 @@ class Player {
     float y;
     float max_health;
     float health;
+    int money = 0;
     Bitmap sprite;
     ArrayList<Enemy> enemy_list = new ArrayList(50);
     ArrayList<Enemy> boss_list = new ArrayList(3);
@@ -38,18 +39,21 @@ class Player {
     ArrayList<E_Projectile> e_proj_list = new ArrayList(50);
     ArrayList<Entity> item_list = new ArrayList<>(100);
     Context context;
+    DrawView drawView;
     int t = 0;
     int cd = 0;
     float def = 10;
     float e_def = 1;
 
-    public Player(float pos_x, float pos_y, int hp, Bitmap bitmap, Context cxt) {
+    public Player(float pos_x, float pos_y, int hp, Bitmap bitmap, Context cxt, DrawView dv) {
         x = pos_x;
         y = pos_y;
         max_health = hp;
         health = hp;
         sprite = bitmap;
         context = cxt;
+        drawView = dv;
+        // money = drawView.levelActivity.mSettings.getInt("money", 0);
     }
 
     public void setPos(float px, float py) {
@@ -73,8 +77,8 @@ class Player {
         t += 1;
         // if (t % 20 == 0)
         // proj_list.add(new Green_Laser(x, y - 100, context));
-        // if (t % 80 == 0)
-        // proj_list.add(new Blue_Laser(x, y - 100, context));
+        if (t % 80 == 0)
+            proj_list.add(new Blue_Laser(x, y - 100, this));
         if (t % 80 == 0) {
             proj_list.add(new Red_Laser(x, y - 110, this));
             proj_list.add(new Red_Laser(x - 10, y - 90, this));
@@ -183,8 +187,8 @@ class P_Projectile extends Entity {
 class Green_Laser extends P_Projectile {
     public Green_Laser(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
-        atk = 3;
-        e_atk = 0;
+        atk = 0;
+        e_atk = 3;
         speed = 10;
         sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_green_laser);
     }
@@ -197,8 +201,8 @@ class Green_Laser extends P_Projectile {
 class Blue_Laser extends P_Projectile {
     public Blue_Laser(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
-        atk = 30;
-        e_atk = 0;
+        atk = 0;
+        e_atk = 30;
         speed = 3;
         sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_blue_laser);
     }
@@ -211,8 +215,8 @@ class Blue_Laser extends P_Projectile {
 class Red_Laser extends P_Projectile {
     public Red_Laser(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
-        atk = 3;
-        e_atk = 0;
+        atk = 0;
+        e_atk = 3;
         speed = 10;
         sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_red_laser);
     }
@@ -226,8 +230,8 @@ class Red_Laser extends P_Projectile {
 class Purple_Laser extends P_Projectile {
     public Purple_Laser(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
-        atk = 9;
-        e_atk = 0;
+        atk = 0;
+        e_atk = 9;
         speed = 10;
         sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_purple_laser);
         angle = -135 + 90 * ran.nextInt(2);
@@ -452,7 +456,9 @@ public class LogicThread extends Thread {
     public LogicThread(Context context) {
         sp = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
         sounds.put("laser", sp.load(context, R.raw.laser, 1));
-        player = new Player(450, 1400, 100, BitmapFactory.decodeResource(context.getResources(), R.drawable.player_texture), context);
+        player = new Player(450, 1400, 100,
+                BitmapFactory.decodeResource(context.getResources(), R.drawable.player_texture), context,
+        drawView);
     }
 
     public void requestStop() {
@@ -489,7 +495,7 @@ public class LogicThread extends Thread {
                     player.enemy_list.removeIf((n) -> (n.health <= 0 ||
                             n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 100));
                     player.boss_list.removeIf((n) -> (n.health <= 0));
-                    player.item_list.removeIf((n) -> distance(n.x, n.y, player.x, player.y) < 1||
+                    player.item_list.removeIf((n) -> distance(n.x, n.y, player.x, player.y) < 1 ||
                             n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10);
 
                     t += 1;
@@ -510,6 +516,7 @@ public class LogicThread extends Thread {
                     if (player.health <= 0)
                         gameover = true;
                 }
+                    drawView.levelActivity.editor.putInt("money", player.money);
                     Thread.sleep(10);
 
             } catch (Exception e) {

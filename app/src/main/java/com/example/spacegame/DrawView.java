@@ -1,6 +1,7 @@
 package com.example.spacegame;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.DragEvent;
@@ -15,7 +16,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
     private LogicThread logicThread;
     float x;
     float y;
-    int level_id;
+    public LevelActivity levelActivity;
 
     /*
     @Override
@@ -70,10 +71,10 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
 
-    public DrawView(Context context, int id) {
+    public DrawView(Context context, LevelActivity level) {
         super(context);
         getHolder().addCallback(this);
-        level_id = id;
+        levelActivity = level;
     }
 
 
