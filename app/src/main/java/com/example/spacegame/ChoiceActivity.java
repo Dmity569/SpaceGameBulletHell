@@ -39,5 +39,14 @@ public class ChoiceActivity extends AppCompatActivity {
                 });
             }
         }
+
+        Button shop = (Button) findViewById(R.id.shop);
+        shop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ChoiceActivity.this, ShopActivity.class);
+                startActivity(i);
+            }
+        });
     }
 }

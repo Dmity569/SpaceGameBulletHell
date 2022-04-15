@@ -137,6 +137,7 @@ class Entity {
 
 class Coin extends Entity {
     int value = 1;
+
     public Coin(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
         speed = 2;
@@ -152,8 +153,7 @@ class Coin extends Entity {
             if (LogicThread.distance(x, y, player.x, player.y) <= 20) {
                 player.money += value;
             }
-        }
-        else {
+        } else {
             speed = 2;
             angle = 90;
         }
@@ -161,7 +161,7 @@ class Coin extends Entity {
 
 }
 
-class Small_Coin extends Coin{
+class Small_Coin extends Coin {
     public Small_Coin(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
         sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.item_coin);
@@ -482,7 +482,7 @@ public class LogicThread extends Thread {
         sounds.put("laser", sp.load(context, R.raw.laser, 1));
         player = new Player(450, 1400, 100,
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.player_texture), context,
-        drawView);
+                drawView);
     }
 
     public void requestStop() {
@@ -540,8 +540,8 @@ public class LogicThread extends Thread {
                     if (player.health <= 0)
                         gameover = true;
                 }
-                    drawView.levelActivity.editor.putInt("money", player.money);
-                    Thread.sleep(10);
+                drawView.levelActivity.editor.putInt("money", player.money);
+                Thread.sleep(10);
 
             } catch (Exception e) {
                 e.printStackTrace();

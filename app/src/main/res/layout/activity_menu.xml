@@ -10,7 +10,7 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srcCompat="@drawable/spase2"
+        app:srcCompat="@drawable/background_menu"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="0dp" />
 
@@ -27,7 +27,7 @@
             android:layout_width="200dp"
             android:layout_height="100dp"
             android:background="@drawable/menu_button_texture"
-            android:fontFamily="@font/GorgeousPixel"
+            android:fontFamily="@font/gorgeouspixel"
             android:text="p l a y"
             android:textColor="#000000"
             android:textSize="36sp" />
@@ -36,12 +36,14 @@
             android:id="@+id/setting"
             android:layout_width="130dp"
             android:layout_height="60dp"
+            android:fontFamily="@font/gorgeouspixel"
             android:text="Settings" />
 
         <Button
             android:id="@+id/creators"
             android:layout_width="130dp"
             android:layout_height="60dp"
+            android:fontFamily="@font/gorgeouspixel"
             android:text="Creators" />
     </LinearLayout>
 

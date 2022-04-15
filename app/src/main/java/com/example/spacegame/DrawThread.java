@@ -71,7 +71,7 @@ public class DrawThread extends Thread {
         c.drawBitmap(icon_health, 0, 0, p);
         c.drawBitmap(bar_health, icon_health.getWidth(), 0, p);
         c.drawBitmap(icon_gold, Resources.getSystem().getDisplayMetrics().widthPixels - icon_gold.getWidth(), 0, p);
-        c.drawText(Integer.toString(logicThread.player.money),
+        c.drawText(Integer.toString(logicThread.player.money) + " C",
                 Resources.getSystem().getDisplayMetrics().widthPixels - icon_gold.getWidth(),
                 text_paint.getTextSize() + icon_gold.getHeight(), text_paint);
 
