@@ -136,12 +136,11 @@ class Entity {
 }
 
 class Coin extends Entity {
-
+    int value = 1;
     public Coin(float pos_x, float pos_y, Player plr) {
         super(pos_x, pos_y, plr);
         speed = 2;
         angle = 90;
-        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.item_coin);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -150,6 +149,9 @@ class Coin extends Entity {
         if (LogicThread.distance(x, y, player.x, player.y) < 300) {
             angle = 90 - (float) toDegrees(Math.atan2(player.x - x, player.y - y));
             speed += 0.1;
+            if (LogicThread.distance(x, y, player.x, player.y) <= 20) {
+                player.money += value;
+            }
         }
         else {
             speed = 2;
@@ -157,6 +159,22 @@ class Coin extends Entity {
         }
     }
 
+}
+
+class Small_Coin extends Coin{
+    public Small_Coin(float pos_x, float pos_y, Player plr) {
+        super(pos_x, pos_y, plr);
+        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.item_coin);
+    }
+}
+
+class Big_Coin extends Coin {
+
+    public Big_Coin(float pos_x, float pos_y, Player plr) {
+        super(pos_x, pos_y, plr);
+        value = 10;
+        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.item_big_coin);
+    }
 }
 
 class P_Projectile extends Entity {
@@ -276,8 +294,13 @@ class Enemy extends Entity {
     }
 
     public void dropMoney() {
-        for (int i = 0; i < moneyDrop; i++) {
-            player.item_list.add(new Coin(x + 150 * (float) random() - 75, y + 150 * (float) random() - 75, player));
+        //coin_value 10
+        for (int i = 0; i < moneyDrop / 10; i++) {
+            player.item_list.add(new Big_Coin(x + 150 * (float) random() - 75, y + 150 * (float) random() - 75, player));
+        }
+        //coin_value 1
+        for (int i = 0; i < moneyDrop % 10; i++) {
+            player.item_list.add(new Small_Coin(x + 150 * (float) random() - 75, y + 150 * (float) random() - 75, player));
         }
     }
 }
@@ -329,6 +352,7 @@ class Death_Skull extends Enemy {
         max_health = 350;
         sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.boss_death_skull);
         target_y = 200;
+        moneyDrop = 666;
     }
 
     @Override
@@ -351,9 +375,9 @@ class Death_Skull extends Enemy {
         super.shoot();
         t += 1;
         if (t % 160 == 0) {
-            player.e_proj_list.add(new Bomb(x, y, player, 45));
+            player.e_proj_list.add(new Bomb(x, y, player, 0));
             player.e_proj_list.add(new Bomb(x, y, player, 90));
-            player.e_proj_list.add(new Bomb(x, y, player, 135));
+            player.e_proj_list.add(new Bomb(x, y, player, 180));
         }
         if (t == 160)
             t = 0;
@@ -495,7 +519,7 @@ public class LogicThread extends Thread {
                     player.enemy_list.removeIf((n) -> (n.health <= 0 ||
                             n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 100));
                     player.boss_list.removeIf((n) -> (n.health <= 0));
-                    player.item_list.removeIf((n) -> distance(n.x, n.y, player.x, player.y) < 1 ||
+                    player.item_list.removeIf((n) -> distance(n.x, n.y, player.x, player.y) <= 20 ||
                             n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10);
 
                     t += 1;

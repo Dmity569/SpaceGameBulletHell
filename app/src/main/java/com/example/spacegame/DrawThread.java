@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -22,6 +23,7 @@ public class DrawThread extends Thread {
     private Bitmap background;
     private int bg_y1, bg_y2, bg_y3;
     public LogicThread logicThread;
+    public Typeface pixel_tf;
 
 
     private volatile boolean running = true;//флаг для остановки потока
@@ -31,6 +33,7 @@ public class DrawThread extends Thread {
         bar_health = BitmapFactory.decodeResource(context.getResources(), R.drawable.bar_health);
         icon_gold= BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_gold);
         background = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_level);
+        pixel_tf = Typeface.createFromAsset(context.getAssets(), "fonts/GorgeousPixel.ttf");
         this.surfaceHolder = surfaceHolder;
     }
 
@@ -62,12 +65,15 @@ public class DrawThread extends Thread {
         health_paint.setColor(Color.RED);
         Paint text_paint = new Paint();
         text_paint.setColor(Color.WHITE);
-        text_paint.setTextSize(20);
+        text_paint.setTextSize(72);
+        text_paint.setTypeface(pixel_tf);
         c.drawRect(icon_health.getWidth(), 0, icon_health.getWidth() + 500 * logicThread.player.health / logicThread.player.max_health, bar_health.getHeight(), health_paint);
         c.drawBitmap(icon_health, 0, 0, p);
         c.drawBitmap(bar_health, icon_health.getWidth(), 0, p);
         c.drawBitmap(icon_gold, Resources.getSystem().getDisplayMetrics().widthPixels - icon_gold.getWidth(), 0, p);
-        c.drawText(Integer.toString(logicThread.player.money), Resources.getSystem().getDisplayMetrics().widthPixels - 2 * icon_gold.getWidth(), icon_gold.getHeight() / 2, text_paint);
+        c.drawText(Integer.toString(logicThread.player.money),
+                Resources.getSystem().getDisplayMetrics().widthPixels - icon_gold.getWidth(),
+                text_paint.getTextSize() + icon_gold.getHeight(), text_paint);
 
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
