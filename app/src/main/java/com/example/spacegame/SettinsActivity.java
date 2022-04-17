@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.Switch;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,8 +36,11 @@ public class SettinsActivity extends AppCompatActivity {
 
         SeekBar sound = findViewById(R.id.seekBar_звук);
         sound.setMin(0); //%
-        sound.setMax(100); //%
+        sound.setMax(99); //%
         sound.setProgress(mSettings.getInt("sound", 50));
+
+        Switch Switch_альтернативное_управление = findViewById(R.id.Switch_альтернативное_управление);
+        Switch_альтернативное_управление.setChecked(mSettings.getBoolean("альтернативное_управление", false));
 
         Button set_settings = findViewById(R.id.set_settins);
         set_settings.setOnClickListener(new View.OnClickListener() {
@@ -44,6 +48,7 @@ public class SettinsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 editor.putInt("music", music.getProgress());
                 editor.putInt("sound", sound.getProgress());
+                editor.putBoolean("альтернативное_управление", Switch_альтернативное_управление.isChecked());
                 editor.apply();
                 onBackPressed();
             }
