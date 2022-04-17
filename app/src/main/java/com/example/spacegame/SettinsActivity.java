@@ -15,7 +15,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SettinsActivity extends AppCompatActivity {
-    SharedPreferences mSettings;
+    public SharedPreferences mSettings;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
 
