@@ -20,6 +20,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
     private LogicThread logicThread;
     float x;
     float y;
+    public LevelActivity levelActivity;
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
@@ -52,9 +53,11 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
         return true;
     }
 
-    public DrawView(Context context) {
+
+    public DrawView(Context context, LevelActivity level) {
         super(context);
         getHolder().addCallback(this);
+        levelActivity = level;
     }
 
     @Override
@@ -64,6 +67,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
         logicThread.start();
         drawThread.start();
         logicThread.drawThread = drawThread;
+        logicThread.drawView = this;
         drawThread.logicThread = logicThread;
 
         SensorManager sensormanager;

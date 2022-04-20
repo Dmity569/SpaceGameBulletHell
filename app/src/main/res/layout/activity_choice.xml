@@ -10,7 +10,7 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srcCompat="@drawable/spase2"
+        app:srcCompat="@drawable/background_menu"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="0dp" />
 
@@ -19,8 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        tools:layout_editor_absoluteX="199dp"
-        tools:layout_editor_absoluteY="368dp">
+        tools:layout_editor_absoluteX="171dp"
+        tools:layout_editor_absoluteY="-76dp">
 
         <TableRow
             android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/level_button_texture"
-                    android:fontFamily="sans-serif-black"
+                    android:fontFamily="@font/gorgeouspixel"
                     android:text="1"
                     android:textColor="#000000"
                     android:textSize="36sp" />
@@ -50,7 +50,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/level_button_texture"
-                    android:fontFamily="sans-serif-black"
+                    android:fontFamily="@font/gorgeouspixel"
                     android:text="2"
                     android:textColor="#000000"
                     android:textSize="36sp" />
@@ -61,7 +61,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/level_button_texture"
-                    android:fontFamily="sans-serif-black"
+                    android:fontFamily="@font/gorgeouspixel"
                     android:text="3"
                     android:textColor="#000000"
                     android:textSize="36sp" />
@@ -85,7 +85,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/level_button_texture"
-                    android:fontFamily="sans-serif-black"
+                    android:fontFamily="@font/gorgeouspixel"
                     android:text="4"
                     android:textColor="#000000"
                     android:textSize="36sp" />
@@ -96,7 +96,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/level_button_texture"
-                    android:fontFamily="sans-serif-black"
+                    android:fontFamily="@font/gorgeouspixel"
                     android:text="5"
                     android:textColor="#000000"
                     android:textSize="36sp" />
@@ -107,7 +107,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/level_button_texture"
-                    android:fontFamily="sans-serif-black"
+                    android:fontFamily="@font/gorgeouspixel"
                     android:text="6"
                     android:textColor="#000000"
                     android:textSize="36sp" />
@@ -131,7 +131,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/level_button_texture"
-                    android:fontFamily="sans-serif-black"
+                    android:fontFamily="@font/gorgeouspixel"
                     android:text="7"
                     android:textColor="#000000"
                     android:textSize="36sp" />
@@ -142,7 +142,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/level_button_texture"
-                    android:fontFamily="sans-serif-black"
+                    android:fontFamily="@font/gorgeouspixel"
                     android:text="8"
                     android:textColor="#000000"
                     android:textSize="36sp" />
@@ -153,7 +153,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/level_button_texture"
-                    android:fontFamily="sans-serif-black"
+                    android:fontFamily="@font/gorgeouspixel"
                     android:text="9"
                     android:textColor="#000000"
                     android:textSize="36sp" />
@@ -161,5 +161,13 @@
         </TableRow>
 
     </TableLayout>
+
+    <Button
+        android:id="@+id/shop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/icon_gold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
