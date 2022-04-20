@@ -17,21 +17,21 @@ public class CreatorsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mSettings = getSharedPreferences("mysettings", Context.MODE_PRIVATE);
-        float volume = (float) mSettings.getInt("music", 50);
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_creators);
-        mp = MediaPlayer.create(this, R.raw.creators_main_frame);
-        mp.setLooping(true);
-        mp.seekTo(0);
-
-        int MAX_VOLUME = 100;
-
-        final float volume_x = (float) (1 - (Math.log(MAX_VOLUME - volume) / Math.log(MAX_VOLUME)));
-        mp.setVolume(volume_x, volume_x);
-
-        mp.start();
+//        mSettings = getSharedPreferences("mysettings", Context.MODE_PRIVATE);
+//        float volume = (float) mSettings.getInt("music", 50);
+//
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        setContentView(R.layout.activity_creators);
+//        mp = MediaPlayer.create(this, R.raw.creators_main_frame);
+//        mp.setLooping(true);
+//        mp.seekTo(0);
+//
+//        int MAX_VOLUME = 100;
+//
+//        final float volume_x = (float) (1 - (Math.log(MAX_VOLUME - volume) / Math.log(MAX_VOLUME)));
+//        mp.setVolume(volume_x, volume_x);
+//
+//        mp.start();
     }
 
     @Override
@@ -52,6 +52,18 @@ public class CreatorsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mSettings = getSharedPreferences("mysettings", Context.MODE_PRIVATE);
+
+        float volume = (float) mSettings.getInt("music", 50);
+
+        mp = MediaPlayer.create(this, R.raw.creators_main_frame);
+        mp.setLooping(true);
+        mp.seekTo(0);
+
+        int MAX_VOLUME = 100;
+
+        final float volume_x = (float) (1 - (Math.log(MAX_VOLUME - volume) / Math.log(MAX_VOLUME)));
+        mp.setVolume(volume_x, volume_x);
         mp.start();
     }
 }

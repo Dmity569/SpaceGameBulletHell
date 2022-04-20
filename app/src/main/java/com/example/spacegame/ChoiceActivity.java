@@ -24,18 +24,18 @@ public class ChoiceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mSettings = getSharedPreferences("mysettings", Context.MODE_PRIVATE);
 
-        float volume = (float) mSettings.getInt("music", 50);
-
-        mp = MediaPlayer.create(this, R.raw.menu);
-        mp.setLooping(true);
-        mp.seekTo(0);
-
-        int MAX_VOLUME = 100;
-
-        final float volume_x = (float) (1 - (Math.log(MAX_VOLUME - volume) / Math.log(MAX_VOLUME)));
-        mp.setVolume(volume_x, volume_x);
-
-        mp.start();
+//        float volume = (float) mSettings.getInt("music", 50);
+//
+//        mp = MediaPlayer.create(this, R.raw.menu);
+//        mp.setLooping(true);
+//        mp.seekTo(0);
+//
+//        int MAX_VOLUME = 100;
+//
+//        final float volume_x = (float) (1 - (Math.log(MAX_VOLUME - volume) / Math.log(MAX_VOLUME)));
+//        mp.setVolume(volume_x, volume_x);
+//
+//        mp.start();
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_choice);
         int level_amount = 9;
@@ -78,6 +78,18 @@ public class ChoiceActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mSettings = getSharedPreferences("mysettings", Context.MODE_PRIVATE);
+
+        float volume = (float) mSettings.getInt("music", 50);
+
+        mp = MediaPlayer.create(this, R.raw.menu);
+        mp.setLooping(true);
+        mp.seekTo(0);
+
+        int MAX_VOLUME = 100;
+
+        final float volume_x = (float) (1 - (Math.log(MAX_VOLUME - volume) / Math.log(MAX_VOLUME)));
+        mp.setVolume(volume_x, volume_x);
         mp.start();
     }
 }
