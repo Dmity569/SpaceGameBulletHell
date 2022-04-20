@@ -454,8 +454,8 @@ class Bomb_Frag extends E_Projectile {
 class Death_Laser extends E_Projectile {
     public Death_Laser(float pos_x, float pos_y, Player plr, float ang) {
         super(pos_x, pos_y, plr);
-        atk = 10;
-        e_atk = 0;
+        atk = 0;
+        e_atk = 10;
         speed = 12;
         angle = ang;
         sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.projectile_green_laser);
