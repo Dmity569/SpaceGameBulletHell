@@ -17,11 +17,12 @@ public class CreatorsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        mSettings = getSharedPreferences("mysettings", Context.MODE_PRIVATE);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_creators);
+
+        mSettings = getSharedPreferences("mysettings", Context.MODE_PRIVATE);
 //        float volume = (float) mSettings.getInt("music", 50);
 //
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        setContentView(R.layout.activity_creators);
 //        mp = MediaPlayer.create(this, R.raw.creators_main_frame);
 //        mp.setLooping(true);
 //        mp.seekTo(0);
@@ -39,16 +40,19 @@ public class CreatorsActivity extends AppCompatActivity {
         super.onBackPressed();
         mp.stop();
     }
+
     @Override
     protected void onUserLeaveHint() {
         mp.stop();
         super.onUserLeaveHint();
     }
+
     @Override
     protected void onPause() {
         super.onPause();
         mp.stop();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
