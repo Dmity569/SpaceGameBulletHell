@@ -44,6 +44,16 @@ public class CreatorsActivity extends AppCompatActivity {
         mp.stop();
         super.onUserLeaveHint();
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mp.stop();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mp.start();
+    }
 }
 
 
