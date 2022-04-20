@@ -41,26 +41,6 @@ public class MenuActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
-
-
-//        setContentView(new MyDraw(this));
     }
 }
 
-//class MyDraw extends View {
-//    public MyDraw (Context context) {
-//        super(context);
-//    }
-//
-//    @Override
-//    protected void onDraw(Canvas canvas) {
-//        super.onDraw(canvas);
-//        int blue = Color.BLUE;
-//        Paint paint = new Paint();
-//        // Выводим изображение
-//        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.spase2);
-//        int xx = canvas.getWidth(), yy = canvas.getHeight();
-//        canvas.drawBitmap(image, xx - image.getWidth(), yy - image.getHeight(), paint);
-//    }
-//}

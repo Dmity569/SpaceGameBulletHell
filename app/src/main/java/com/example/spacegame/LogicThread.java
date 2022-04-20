@@ -1,6 +1,7 @@
 package com.example.spacegame;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -52,19 +53,18 @@ class Player {
     public void setPos(float px, float py) {
         x += px;
         y += py;
-        if (x > Resources.getSystem().getDisplayMetrics().widthPixels - 75) {
-            x = Resources.getSystem().getDisplayMetrics().widthPixels - 75;
+        if (x > Resources.getSystem().getDisplayMetrics().widthPixels - sprite.getWidth() / 2) {
+            x = Resources.getSystem().getDisplayMetrics().widthPixels - sprite.getWidth() / 2;
         }
-        if (x < 75){
-            x = 75;
+        if (x < sprite.getWidth() / 2) {
+            x = sprite.getWidth() / 2;
         }
-        if (y > Resources.getSystem().getDisplayMetrics().heightPixels - 110) {
-            y = Resources.getSystem().getDisplayMetrics().heightPixels - 110;
+        if (y > Resources.getSystem().getDisplayMetrics().heightPixels - sprite.getHeight() / 2) {
+            y = Resources.getSystem().getDisplayMetrics().heightPixels - sprite.getHeight() / 2;
         }
-        if (y < 110){
-            y = 110;
+        if (y < sprite.getHeight() / 2) {
+            y = sprite.getHeight() / 2;
         }
-
     }
     public void shoot(){
         t += 1;
@@ -226,8 +226,7 @@ class Pirate extends Enemy {
                 angle = 180 * ran.nextInt(2);
             else if (angle < 90 && x >= Resources.getSystem().getDisplayMetrics().widthPixels - 100) {
                 angle = 175;
-            }
-            else if (angle >= 90 && x <= 0) {
+            } else if (angle >= 90 && x <= 0) {
                 angle = 5;
             }
     }
@@ -259,6 +258,7 @@ class Death_Skull extends Enemy {
         sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.boss_death_skull);
         target_y = 200;
     }
+
     @Override
     public void action() {
         super.action();
@@ -308,6 +308,8 @@ class Death_Laser extends E_Projectile {
 }
 public class LogicThread extends Thread {
 
+    SharedPreferences mSettings;
+
     public DrawThread drawThread;
     public Player player;
     private volatile boolean running = true;//флаг для остановки потока
@@ -320,7 +322,7 @@ public class LogicThread extends Thread {
     }
 
 
-    public LogicThread(Context context){
+    public LogicThread(Context context) {
         sp = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
         sounds.put("laser", sp.load(context, R.raw.laser, 1));
         player = new Player(450, 1400, 100, BitmapFactory.decodeResource(context.getResources(), R.drawable.player_texture), context);
@@ -330,60 +332,68 @@ public class LogicThread extends Thread {
         running = false;
     }
 
+    public SharedPreferences help_me(Context context) {
+        mSettings = context.getSharedPreferences("mysettings", Context.MODE_PRIVATE);
+        return mSettings;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void run() {
+
+        mSettings = help_me(player.context);
+
         int t = 0;
         int spawns = 0;
         while (running) {
             try {
                 if (gameover == false) {
-                player.shoot();
-                if (t % 80 == 0)
-                    sp.play(sounds.get("laser"), 1, 1, 0, 0, 1);
-
-                if (player.cd > 0)
-                    player.cd -= 1;
+                    player.shoot();
+                    if (t % 80 == 0)
 
 
-                player.proj_list.forEach((n) -> n.update());
-                player.e_proj_list.forEach((n) -> n.update());
-                player.enemy_list.forEach((n) -> n.update());
-                player.boss_list.forEach((n) -> n.update());
+                        sp.play(sounds.get("laser"), (float) (1 - (Math.log(100 - mSettings.getInt("sound", 50)) / Math.log(100))), (float) (1 - (Math.log(100 - mSettings.getInt("sound", 50)) / Math.log(100))), 0, 0, 1);
 
-                player.proj_list.removeIf((n) -> (n.x < -10 || n.y < -10 || n.x >
-                        Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
-                        n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
-                player.e_proj_list.removeIf((n) -> (n.x < -10 || n.y < -10 || n.x >
-                        Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
-                        n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
-                player.enemy_list.removeIf((n) -> (n.health <= 0 ||
-                        n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 100));
-                player.boss_list.removeIf((n) -> (n.health <= 0));
+                    if (player.cd > 0)
+                        player.cd -= 1;
 
-                t += 1;
-                if (t == 100) {
-                    t = 0;
-                    if (player.enemy_list.size() <= 4 & spawns < 8) {
-                        player.enemy_list.add(new Pirate(
-                                Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 50,
-                                0, player));
-                        spawns += 1;
+
+                    player.proj_list.forEach((n) -> n.update());
+                    player.e_proj_list.forEach((n) -> n.update());
+                    player.enemy_list.forEach((n) -> n.update());
+                    player.boss_list.forEach((n) -> n.update());
+
+                    player.proj_list.removeIf((n) -> (n.x < -10 || n.y < -10 || n.x >
+                            Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
+                            n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
+                    player.e_proj_list.removeIf((n) -> (n.x < -10 || n.y < -10 || n.x >
+                            Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
+                            n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
+                    player.enemy_list.removeIf((n) -> (n.health <= 0 ||
+                            n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 100));
+                    player.boss_list.removeIf((n) -> (n.health <= 0));
+
+                    t += 1;
+                    if (t == 100) {
+                        t = 0;
+                        if (player.enemy_list.size() <= 4 & spawns < 8) {
+                            player.enemy_list.add(new Pirate(
+                                    Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 50,
+                                    0, player));
+                            spawns += 1;
+                        } else if (spawns == 8) {
+                            player.boss_list.add(new Death_Skull(
+                                    Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 100,
+                                    0, player));
+                            spawns += 1;
+                        }
                     }
-                    else if (spawns == 8) {
-                        player.boss_list.add(new Death_Skull(
-                                Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 100,
-                                0, player));
-                        spawns += 1;
-                    }
+                    if (player.health <= 0)
+                        gameover = true;
+                    Thread.sleep(10);
                 }
-                if (player.health <= 0)
-                    gameover = true;
-                Thread.sleep(10);
-                }
-            }
-            catch (Exception e) {
-                    e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
