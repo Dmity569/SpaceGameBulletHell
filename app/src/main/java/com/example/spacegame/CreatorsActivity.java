@@ -38,7 +38,11 @@ public class CreatorsActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         mp.stop();
-
+    }
+    @Override
+    protected void onUserLeaveHint() {
+        mp.stop();
+        super.onUserLeaveHint();
     }
 }
 

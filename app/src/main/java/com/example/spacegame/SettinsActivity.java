@@ -3,6 +3,7 @@ package com.example.spacegame;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SettinsActivity extends AppCompatActivity {
     public SharedPreferences mSettings;
 
+    MediaPlayer mp;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
 
     @Override
@@ -24,6 +27,19 @@ public class SettinsActivity extends AppCompatActivity {
 
         mSettings = getSharedPreferences("mysettings", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mSettings.edit();
+
+        float volume = (float) mSettings.getInt("music", 50);
+
+        mp = MediaPlayer.create(this, R.raw.menu);
+        mp.setLooping(true);
+        mp.seekTo(0);
+
+        int MAX_VOLUME = 100;
+
+        final float volume_x = (float) (1 - (Math.log(MAX_VOLUME - volume) / Math.log(MAX_VOLUME)));
+        mp.setVolume(volume_x, volume_x);
+
+        mp.start();
 
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -53,5 +69,17 @@ public class SettinsActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mp.stop();
+
+    }
+    @Override
+    protected void onUserLeaveHint() {
+        mp.stop();
+        super.onUserLeaveHint();
     }
 }
