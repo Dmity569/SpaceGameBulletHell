@@ -1,6 +1,7 @@
 package com.example.spacegame;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,9 +9,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.provider.MediaStore.Audio;
 
 import androidx.annotation.RequiresApi;
 
@@ -464,6 +467,8 @@ class Death_Laser extends E_Projectile {
 
 public class LogicThread extends Thread {
 
+    SharedPreferences mSettings;
+
     public DrawThread drawThread;
     public DrawView drawView;
     public Player player;
@@ -489,9 +494,17 @@ public class LogicThread extends Thread {
         running = false;
     }
 
+    public SharedPreferences help_me(Context context) {
+        mSettings = context.getSharedPreferences("mysettings", Context.MODE_PRIVATE);
+        return mSettings;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void run() {
+
+        mSettings = help_me(player.context);
+
         int t = 0;
         int spawns = 0;
         while (running) {
@@ -499,10 +512,12 @@ public class LogicThread extends Thread {
                 if (gameover == false) {
                     player.shoot();
                     if (t % 80 == 0)
-                        sp.play(sounds.get("laser"), 1, 1, 0, 0, 1);
+
+                        sp.play(sounds.get("laser"), (float) (1 - (Math.log(100 - mSettings.getInt("sound", 50)) / Math.log(100))), (float) (1 - (Math.log(100 - mSettings.getInt("sound", 50)) / Math.log(100))), 0, 0, 1);
 
                     if (player.cd > 0)
                         player.cd -= 1;
+
 
                     player.proj_list.forEach((n) -> n.update());
                     player.e_proj_list.forEach((n) -> n.update());
@@ -510,27 +525,33 @@ public class LogicThread extends Thread {
                     player.boss_list.forEach((n) -> n.update());
                     player.item_list.forEach((n) -> n.update());
 
+
                     player.proj_list.removeIf((n) -> (n.x < -10 || n.y < -10 || n.x >
                             Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
                             n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
                     player.e_proj_list.removeIf((n) -> (n.dest || n.x < -10 || n.y < -10 || n.x >
+
                             Resources.getSystem().getDisplayMetrics().widthPixels + 10 ||
                             n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10));
                     player.enemy_list.removeIf((n) -> (n.health <= 0 ||
                             n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 100));
                     player.boss_list.removeIf((n) -> (n.health <= 0));
+
                     player.item_list.removeIf((n) -> distance(n.x, n.y, player.x, player.y) <= 20 ||
                             n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10);
 
                     t += 1;
                     if (t == 100) {
                         t = 0;
+
                         if (player.enemy_list.size() <= 4 & spawns < 16) {
                             player.enemy_list.add(new Pirate(
                                     Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 50,
                                     0, player));
                             spawns += 1;
+
                         } else if (spawns == 16) {
+
                             player.boss_list.add(new Death_Skull(
                                     Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 100,
                                     0, player));
@@ -542,6 +563,7 @@ public class LogicThread extends Thread {
                 }
                 drawView.levelActivity.editor.putInt("money", player.money);
                 Thread.sleep(10);
+
 
             } catch (Exception e) {
                 e.printStackTrace();
