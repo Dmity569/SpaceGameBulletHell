@@ -33,7 +33,7 @@
             android:textSize="36sp" />
 
         <Button
-            android:id="@+id/setting"
+            android:id="@+id/settings"
             android:layout_width="130dp"
             android:layout_height="60dp"
             android:fontFamily="@font/gorgeouspixel"

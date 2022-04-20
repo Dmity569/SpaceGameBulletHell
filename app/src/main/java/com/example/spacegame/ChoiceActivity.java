@@ -2,6 +2,8 @@ package com.example.spacegame;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,10 +16,26 @@ import android.widget.TableRow;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ChoiceActivity extends AppCompatActivity {
+    MediaPlayer mp;
+    public SharedPreferences mSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSettings = getSharedPreferences("mysettings", Context.MODE_PRIVATE);
+
+//        float volume = (float) mSettings.getInt("music", 50);
+//
+//        mp = MediaPlayer.create(this, R.raw.menu);
+//        mp.setLooping(true);
+//        mp.seekTo(0);
+//
+//        int MAX_VOLUME = 100;
+//
+//        final float volume_x = (float) (1 - (Math.log(MAX_VOLUME - volume) / Math.log(MAX_VOLUME)));
+//        mp.setVolume(volume_x, volume_x);
+//
+//        mp.start();
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_choice);
         int level_amount = 9;
@@ -35,6 +53,7 @@ public class ChoiceActivity extends AppCompatActivity {
                         Intent i = new Intent(ChoiceActivity.this, LevelActivity.class);
                         i.putExtra("level_id", level_id);
                         startActivity(i);
+                        mp.stop();
                     }
                 });
             }
@@ -48,5 +67,38 @@ public class ChoiceActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mp.stop();
+
+    }
+    @Override
+    protected void onUserLeaveHint() {
+        mp.stop();
+        super.onUserLeaveHint();
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mp.stop();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSettings = getSharedPreferences("mysettings", Context.MODE_PRIVATE);
+
+        float volume = (float) mSettings.getInt("music", 50);
+
+        mp = MediaPlayer.create(this, R.raw.menu);
+        mp.setLooping(true);
+        mp.seekTo(0);
+
+        int MAX_VOLUME = 100;
+
+        final float volume_x = (float) (1 - (Math.log(MAX_VOLUME - volume) / Math.log(MAX_VOLUME)));
+        mp.setVolume(volume_x, volume_x);
+        mp.start();
     }
 }

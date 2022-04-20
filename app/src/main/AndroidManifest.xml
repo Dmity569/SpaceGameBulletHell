@@ -30,15 +30,30 @@
             android:screenOrientation="portrait"
             android:exported="true">
         </activity>
+
         <activity android:name=".ShopActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:exported="true">
         </activity>
+
+        <activity android:name=".CreatorsActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".SettinsActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:exported="true">
+        </activity>
+
+
 <!--        <meta-data-->
 <!--            android:name="preloaded_fonts"-->
-<!--            android:resource="@array/preloaded_fonts"-->
-<!--        />-->
+<!--            android:resource="@array/preloaded_fonts" />-->
+
     </application>
 
 </manifest>
