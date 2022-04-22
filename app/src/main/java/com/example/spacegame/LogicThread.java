@@ -42,21 +42,19 @@ class Player {
     ArrayList<E_Projectile> e_proj_list = new ArrayList(50);
     ArrayList<Entity> item_list = new ArrayList<>(100);
     Context context;
-    DrawView drawView;
     int t = 0;
     int cd = 0;
     float def = 10;
-    float e_def = 1;
+    float e_def = 10;
 
-    public Player(float pos_x, float pos_y, int hp, Bitmap bitmap, Context cxt, DrawView dv) {
+    public Player(float pos_x, float pos_y, int hp, Bitmap bitmap, Context cxt) {
         x = pos_x;
         y = pos_y;
         max_health = hp;
         health = hp;
         sprite = bitmap;
         context = cxt;
-        drawView = dv;
-        // money = drawView.levelActivity.mSettings.getInt("money", 0);
+        // money = logicThread.mSettings.getInt("money", 0);
     }
 
     public void setPos(float px, float py) {
@@ -94,6 +92,10 @@ class Player {
         // proj_list.add(new Purple_Laser(x, y - 100, context));
         if (t == 160)
             t = 0;
+    }
+
+    public void initialize(LogicThread logicThread){
+        money = logicThread.mSettings.getInt("money", 0);
     }
 }
 
@@ -468,6 +470,7 @@ class Death_Laser extends E_Projectile {
 public class LogicThread extends Thread {
 
     SharedPreferences mSettings;
+    SharedPreferences.Editor editor;
 
     public DrawThread drawThread;
     public DrawView drawView;
@@ -486,8 +489,7 @@ public class LogicThread extends Thread {
         sp = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
         sounds.put("laser", sp.load(context, R.raw.laser, 1));
         player = new Player(450, 1400, 100,
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.player_texture), context,
-                drawView);
+                BitmapFactory.decodeResource(context.getResources(), R.drawable.player_texture), context);
     }
 
     public void requestStop() {
@@ -504,6 +506,8 @@ public class LogicThread extends Thread {
     public void run() {
 
         mSettings = help_me(player.context);
+        editor = mSettings.edit();
+        player.initialize(this);
 
         int t = 0;
         int spawns = 0;
@@ -561,7 +565,8 @@ public class LogicThread extends Thread {
                     if (player.health <= 0)
                         gameover = true;
                 }
-                drawView.levelActivity.editor.putInt("money", player.money);
+                editor.putInt("money", player.money);
+                editor.apply();
                 Thread.sleep(10);
 
 
