@@ -43,6 +43,14 @@
                         android:fontFamily="@font/gorgeouspixel"
                         android:text="Arrow"
                         android:textSize="24sp" />
+
+                    <Button
+                        android:id="@+id/pureTrident"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/gorgeouspixel"
+                        android:text="Pure\nTrident"
+                        android:textSize="24sp" />
                 </LinearLayout>
             </ScrollView>
 
@@ -67,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/gorgeouspixel"
                 android:text="ShipInfo"
-                android:textSize="36sp" />
+                android:textSize="30sp" />
         </LinearLayout>
     </LinearLayout>
 
