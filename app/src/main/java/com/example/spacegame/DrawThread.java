@@ -33,7 +33,7 @@ public class DrawThread extends Thread {
         bar_health = BitmapFactory.decodeResource(context.getResources(), R.drawable.bar_health);
         icon_gold= BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_gold);
         background = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_level);
-        pixel_tf = Typeface.createFromAsset(context.getAssets(), "fonts/GorgeousPixel.ttf");
+        pixel_tf = Typeface.createFromAsset(context.getAssets(), "fonts/gorgeouspixel.ttf");
         this.surfaceHolder = surfaceHolder;
     }
 
@@ -88,7 +88,6 @@ public class DrawThread extends Thread {
             Canvas canvas = surfaceHolder.lockCanvas();
             if (canvas != null) {
                 try {
-                    if (logicThread.gameover == false) {
                         drawBG(canvas, paint);
 //
 //                    canvas.drawCircle(x, y, 50, paint);
@@ -125,10 +124,11 @@ public class DrawThread extends Thread {
                         canvas.drawBitmap(logicThread.player.sprite, logicThread.player.x - logicThread.player.sprite.getWidth() / 2,
                                 logicThread.player.y - logicThread.player.sprite.getHeight() / 2, paint);
                         drawUI(canvas, paint);
-                    }
-                    bg_y1 += 1;
-                    bg_y2 += 1;
-                    bg_y3 += 1;
+                        if (!logicThread.gameover) {
+                            bg_y1 += 1;
+                            bg_y2 += 1;
+                            bg_y3 += 1;
+                        }
                         Thread.sleep(10);
 
 

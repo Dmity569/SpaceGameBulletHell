@@ -76,6 +76,22 @@
                 android:fontFamily="@font/gorgeouspixel"
                 android:text="ShipInfo"
                 android:textSize="30sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/buy_choose_ship"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/gorgeouspixel"
+                    android:text="Buy"
+                    android:textSize="24sp" />
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

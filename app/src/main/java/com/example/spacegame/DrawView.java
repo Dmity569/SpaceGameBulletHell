@@ -27,7 +27,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
 
         mSettings = getContext().getSharedPreferences("mysettings", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mSettings.edit();
-        if (!mSettings.getBoolean("альтернативное_управление", false)) {
+        if (!mSettings.getBoolean("альтернативное_управление", false) && !logicThread.gameover) {
             switch (e.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     x = e.getX();
@@ -81,7 +81,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
             public void onSensorChanged(SensorEvent sensorEvent) {
                 mSettings = getContext().getSharedPreferences("mysettings", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = mSettings.edit();
-                if (mSettings.getBoolean("альтернативное_управление", false)){
+                if (mSettings.getBoolean("альтернативное_управление", false) && !logicThread.gameover){
                     float[] rotatinMatrix = new float[16];
                     SensorManager.getRotationMatrixFromVector(rotatinMatrix, sensorEvent.values);
 
