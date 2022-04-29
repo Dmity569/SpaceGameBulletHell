@@ -1,6 +1,9 @@
 package com.example.spacegame;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -474,7 +477,7 @@ public class LogicThread extends Thread {
     public DrawThread drawThread;
     public DrawView drawView;
     public Player player;
-    private volatile boolean running = true;//флаг для остановки потока
+    private volatile boolean running = true; //флаг для остановки потока
     public SoundPool sp;
     public Dictionary<String, Integer> sounds = new Hashtable<>();
     public boolean gameover = false;
@@ -562,6 +565,8 @@ public class LogicThread extends Thread {
                     }
                     if (player.health <= 0)
                         gameover = true;
+                } else {
+                    running = false;
                 }
                 drawView.levelActivity.editor.putInt("money", player.money);
                 Thread.sleep(10);
@@ -571,5 +576,9 @@ public class LogicThread extends Thread {
                 e.printStackTrace();
             }
         }
+        //тут надо вызвать смерть...
+        Intent myIntent = new Intent(player.context, DefeatActivity.class);
+        player.context.startActivity(myIntent);
+
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,6 +24,9 @@ public class DefeatActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+//        TextView t = (TextView) findViewById(R.id.textView7);
+//        t.setText("Вы накопили");
     }
 
 }
