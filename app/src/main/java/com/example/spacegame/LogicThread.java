@@ -47,12 +47,9 @@ class Player {
     float def = 10;
     float e_def = 10;
 
-    public Player(float pos_x, float pos_y, int hp, Bitmap bitmap, Context cxt) {
+    public Player(float pos_x, float pos_y, Context cxt) {
         x = pos_x;
         y = pos_y;
-        max_health = hp;
-        health = hp;
-        sprite = bitmap;
         context = cxt;
         // money = logicThread.mSettings.getInt("money", 0);
     }
@@ -96,6 +93,22 @@ class Player {
 
     public void initialize(LogicThread logicThread){
         money = logicThread.mSettings.getInt("money", 0);
+        switch (logicThread.mSettings.getString("selectedShip", "Arrow")){
+            case "Arrow":
+                max_health = EditorInfo.Ship_Arrow.max_health;
+                health = max_health;
+                def = EditorInfo.Ship_Arrow.def;
+                e_def = EditorInfo.Ship_Arrow.e_def;
+                sprite = BitmapFactory.decodeResource(context.getResources(), EditorInfo.Ship_Arrow.sprite);
+                break;
+            case "Pure\nTrident":
+                max_health = EditorInfo.Ship_Pure_Trident.max_health;
+                health = max_health;
+                def = EditorInfo.Ship_Pure_Trident.def;
+                e_def = EditorInfo.Ship_Pure_Trident.e_def;
+                sprite = BitmapFactory.decodeResource(context.getResources(), EditorInfo.Ship_Pure_Trident.sprite);
+                break;
+        }
     }
 }
 
@@ -488,8 +501,7 @@ public class LogicThread extends Thread {
     public LogicThread(Context context) {
         sp = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
         sounds.put("laser", sp.load(context, R.raw.laser, 1));
-        player = new Player(450, 1400, 100,
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.player_texture), context);
+        player = new Player(450, 1400, context);
     }
 
     public void requestStop() {
