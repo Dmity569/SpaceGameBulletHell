@@ -38,7 +38,7 @@ public class ShipsActivity extends AppCompatActivity {
                 shopEditor.putBoolean(ship_name, true);
                 settingsEditor.apply();
                 shopEditor.apply();
-                moneyShips.setText(Integer.toString(mSettings.getInt("money", 0)) + "   G");
+                moneyShips.setText(Integer.toString(mSettings.getInt("money", 0)) + "    G");
                 changeShips();
             }
         }
@@ -119,7 +119,7 @@ public class ShipsActivity extends AppCompatActivity {
         shopData = getSharedPreferences("shopData", Context.MODE_PRIVATE);
         shopEditor = shopData.edit();
         moneyShips = (TextView) findViewById(R.id.moneyShips);
-        moneyShips.setText(Integer.toString(mSettings.getInt("money", 0)) + "   G");
+        moneyShips.setText(Integer.toString(mSettings.getInt("money", 0)) + "    G");
         shipInfo = (TextView) findViewById(R.id.shipInfo);
         shipImage = (ImageView) findViewById(R.id.shipImage);
         shipButtons = (LinearLayout) findViewById(R.id.shipButtons);

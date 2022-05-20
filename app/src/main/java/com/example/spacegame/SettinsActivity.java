@@ -79,6 +79,7 @@ public class SettinsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 editor.clear();
                 editor.putString("selectedShip", "Arrow");
+                editor.putBoolean("firstLaunch", false);
                 editor.apply();
                 editorShop.clear();
                 editorShop.putBoolean("Arrow", true);

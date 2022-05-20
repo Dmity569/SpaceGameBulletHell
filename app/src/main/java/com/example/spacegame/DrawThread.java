@@ -76,6 +76,10 @@ public class DrawThread extends Thread {
                 text_paint.getTextSize() + icon_gold.getHeight(), text_paint);
 
     }
+
+    public void drawLevelEnd(Canvas c, Paint p) {
+        c.drawColor(Color.argb(170, 0, 0, 0));
+    }
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void run() {
@@ -123,12 +127,14 @@ public class DrawThread extends Thread {
                                 canvas.drawBitmap(n.sprite, n.x - n.sprite.getWidth() / 2, n.y - n.sprite.getHeight() / 2, paint));
                         canvas.drawBitmap(logicThread.player.sprite, logicThread.player.x - logicThread.player.sprite.getWidth() / 2,
                                 logicThread.player.y - logicThread.player.sprite.getHeight() / 2, paint);
-                        drawUI(canvas, paint);
+
                         if (!logicThread.gameover) {
                             bg_y1 += 1;
                             bg_y2 += 1;
                             bg_y3 += 1;
                         }
+                        if (logicThread.gameover || logicThread.win) drawLevelEnd(canvas, paint);
+                        else drawUI(canvas, paint);
                         Thread.sleep(10);
 
 

@@ -492,11 +492,16 @@ public class LogicThread extends Thread {
     public SoundPool sp;
     public Dictionary<String, Integer> sounds = new Hashtable<>();
     public boolean gameover = false;
+    public boolean bossSpawned = false;
+    public boolean win = false;
 
     public static double distance(float x1, float y1, float x2, float y2) {
         return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     }
 
+    public void deathWin(Integer health) {
+        if (health <= 0) win = true;
+    }
 
     public LogicThread(Context context) {
         sp = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
@@ -525,7 +530,9 @@ public class LogicThread extends Thread {
         int spawns = 0;
         while (running) {
             try {
-                if (gameover == false) {
+                if (win) {}
+                else if (gameover) {}
+                else {
                     player.shoot();
                     if (t % 80 == 0)
 
@@ -556,6 +563,7 @@ public class LogicThread extends Thread {
                     player.item_list.removeIf((n) -> distance(n.x, n.y, player.x, player.y) <= 20 ||
                             n.y > Resources.getSystem().getDisplayMetrics().heightPixels + 10);
 
+
                     t += 1;
                     if (t == 100) {
                         t = 0;
@@ -572,10 +580,12 @@ public class LogicThread extends Thread {
                                     Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 100,
                                     0, player));
                             spawns += 1;
+                            bossSpawned = true;
                         }
                     }
-                    if (player.health <= 0)
-                        gameover = true;
+                    if (player.health <= 0) gameover = true;
+                    if (bossSpawned && player.boss_list.isEmpty()) win = true;
+
                 }
                 editor.putInt("money", player.money);
                 editor.apply();
