@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 public class EditorInfo {
-    static int ship_amount = 2;
+    static int ship_amount = 3;
     public static class ShipType {
         static float max_health;
         static float def;
@@ -25,5 +25,12 @@ public class EditorInfo {
         static float e_def = 20;
         static int sprite = R.drawable.ship_pure_trident;
         static int price = 100;
+    }
+    public static class Ship_Glass_Cannon extends ShipType{
+        static float max_health = 1;
+        static float def = 1;
+        static float e_def = 1;
+        static int sprite = R.drawable.ship_glass;
+        static int price = 369;
     }
 }

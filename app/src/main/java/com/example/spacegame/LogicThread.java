@@ -42,32 +42,36 @@ class Player {
     ArrayList<E_Projectile> e_proj_list = new ArrayList(50);
     ArrayList<Entity> item_list = new ArrayList<>(100);
     Context context;
+    LogicThread logicThread;
     int t = 0;
     int cd = 0;
     float def = 10;
     float e_def = 10;
 
-    public Player(float pos_x, float pos_y, Context cxt) {
+    public Player(float pos_x, float pos_y, Context cxt, LogicThread lt) {
         x = pos_x;
         y = pos_y;
         context = cxt;
+        logicThread = lt;
         // money = logicThread.mSettings.getInt("money", 0);
     }
 
     public void setPos(float px, float py) {
-        x += px;
-        y += py;
-        if (x > Resources.getSystem().getDisplayMetrics().widthPixels - sprite.getWidth() / 2) {
-            x = Resources.getSystem().getDisplayMetrics().widthPixels - sprite.getWidth() / 2;
-        }
-        if (x < sprite.getWidth() / 2) {
-            x = sprite.getWidth() / 2;
-        }
-        if (y > Resources.getSystem().getDisplayMetrics().heightPixels - sprite.getHeight() / 2) {
-            y = Resources.getSystem().getDisplayMetrics().heightPixels - sprite.getHeight() / 2;
-        }
-        if (y < sprite.getHeight() / 2) {
-            y = sprite.getHeight() / 2;
+        if (!(logicThread.gameover || logicThread.win)) {
+            x += px;
+            y += py;
+            if (x > Resources.getSystem().getDisplayMetrics().widthPixels - sprite.getWidth() / 2) {
+                x = Resources.getSystem().getDisplayMetrics().widthPixels - sprite.getWidth() / 2;
+            }
+            if (x < sprite.getWidth() / 2) {
+                x = sprite.getWidth() / 2;
+            }
+            if (y > Resources.getSystem().getDisplayMetrics().heightPixels - sprite.getHeight() / 2) {
+                y = Resources.getSystem().getDisplayMetrics().heightPixels - sprite.getHeight() / 2;
+            }
+            if (y < sprite.getHeight() / 2) {
+                y = sprite.getHeight() / 2;
+            }
         }
     }
 
@@ -91,7 +95,7 @@ class Player {
             t = 0;
     }
 
-    public void initialize(LogicThread logicThread){
+    public void initialize(){
         money = logicThread.mSettings.getInt("money", 0);
         switch (logicThread.mSettings.getString("selectedShip", "Arrow")){
             case "Arrow":
@@ -108,6 +112,13 @@ class Player {
                 e_def = EditorInfo.Ship_Pure_Trident.e_def;
                 sprite = BitmapFactory.decodeResource(context.getResources(), EditorInfo.Ship_Pure_Trident.sprite);
                 break;
+            case "Glass\nCannon":
+                max_health = EditorInfo.Ship_Glass_Cannon.max_health;
+                health = max_health;
+                def = EditorInfo.Ship_Glass_Cannon.def;
+                e_def = EditorInfo.Ship_Glass_Cannon.e_def;
+                sprite = BitmapFactory.decodeResource(context.getResources(), EditorInfo.Ship_Glass_Cannon.sprite);
+                break;
         }
     }
 }
@@ -117,6 +128,7 @@ class Entity {
     float y;
     float speed;
     float angle = -90;
+    float size = 50;
     ArrayList<Bitmap> anim_sprite = new ArrayList(10);
     int anim_n = 0;
     Bitmap sprite;
@@ -175,6 +187,7 @@ class Coin extends Entity {
             speed = 2;
             angle = 90;
         }
+        if(player.logicThread.win) player.money += value;
     }
 
 }
@@ -207,12 +220,12 @@ class P_Projectile extends Entity {
     public void update() {
         super.update();
         player.enemy_list.forEach((n) -> {
-            if (LogicThread.distance(x, y, n.x + 50, n.y + 50) <= 50) {
+            if (LogicThread.distance(x, y, n.x, n.y) <= size) {
                 n.health -= ((atk / n.def) + (e_atk / n.e_def));
             }
         });
         player.boss_list.forEach((n) -> {
-            if (LogicThread.distance(x, y, n.x + 50, n.y + 50) <= 50) {
+            if (LogicThread.distance(x, y, n.x, n.y) <= size) {
                 n.health -= ((atk / n.def) + (e_atk / n.e_def));
             }
         });
@@ -371,6 +384,7 @@ class Death_Skull extends Enemy {
         sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.boss_death_skull);
         target_y = 200;
         moneyDrop = 666;
+        size = 100;
     }
 
     @Override
@@ -414,7 +428,7 @@ class E_Projectile extends Entity {
     @Override
     public void update() {
         super.update();
-        if (LogicThread.distance(x, y, player.x + 50, player.y + 50) <= 50) {
+        if (LogicThread.distance(x, y, player.x, player.y) <= size) {
             player.health -= ((atk / player.def) + (e_atk / player.e_def));
         }
     }
@@ -506,7 +520,7 @@ public class LogicThread extends Thread {
     public LogicThread(Context context) {
         sp = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
         sounds.put("laser", sp.load(context, R.raw.laser, 1));
-        player = new Player(450, 1400, context);
+        player = new Player(450, 1400, context, this);
     }
 
     public void requestStop() {
@@ -524,7 +538,7 @@ public class LogicThread extends Thread {
 
         mSettings = help_me(player.context);
         editor = mSettings.edit();
-        player.initialize(this);
+        player.initialize();
 
         int t = 0;
         int spawns = 0;
@@ -584,7 +598,11 @@ public class LogicThread extends Thread {
                         }
                     }
                     if (player.health <= 0) gameover = true;
-                    if (bossSpawned && player.boss_list.isEmpty()) win = true;
+                    if (bossSpawned && player.boss_list.isEmpty()) {
+                        win = true;
+                        player.item_list.forEach((n) -> n.update());
+                        player.item_list.clear();
+                    }
 
                 }
                 editor.putInt("money", player.money);

@@ -83,6 +83,13 @@ public class ShipsActivity extends AppCompatActivity {
                 sprite = EditorInfo.Ship_Pure_Trident.sprite;
                 price = EditorInfo.Ship_Pure_Trident.price;
                 break;
+            case "Glass\nCannon":
+                max_health = EditorInfo.Ship_Glass_Cannon.max_health;
+                def = EditorInfo.Ship_Glass_Cannon.def;
+                e_def = EditorInfo.Ship_Glass_Cannon.e_def;
+                sprite = EditorInfo.Ship_Glass_Cannon.sprite;
+                price = EditorInfo.Ship_Glass_Cannon.price;
+                break;
         }
         ship_name = name;
         changeShips();

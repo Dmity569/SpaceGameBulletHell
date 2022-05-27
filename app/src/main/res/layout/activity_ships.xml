@@ -51,6 +51,14 @@
                         android:fontFamily="@font/gorgeouspixel"
                         android:text="Pure\nTrident"
                         android:textSize="24sp" />
+
+                    <Button
+                        android:id="@+id/glassCannon"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/gorgeouspixel"
+                        android:text="Glass\nCannon"
+                        android:textSize="24sp" />
                 </LinearLayout>
             </ScrollView>
 
