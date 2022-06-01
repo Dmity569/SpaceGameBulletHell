@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Switch;
 
@@ -62,6 +63,13 @@ public class SettinsActivity extends AppCompatActivity {
         Switch Switch_альтернативное_управление = findViewById(R.id.Switch_альтернативное_управление);
         Switch_альтернативное_управление.setChecked(mSettings.getBoolean("альтернативное_управление", false));
 
+        EditText editTextname = (EditText) findViewById(R.id.textView8);
+        editTextname.setText(mSettings.getString("user_name", "Select_your_name"));
+
+//        EditText editTextsupercode = (EditText) findViewById(R.id.textView9);
+//        editTextsupercode.setText("0");
+
+
         Button set_settings = findViewById(R.id.set_settins);
         set_settings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,10 +77,22 @@ public class SettinsActivity extends AppCompatActivity {
                 editor.putInt("music", music.getProgress());
                 editor.putInt("sound", sound.getProgress());
                 editor.putBoolean("альтернативное_управление", Switch_альтернативное_управление.isChecked());
+                editor.putString("user_name", editTextname.getText().toString());
+//                System.out.println(editTextname.getText().toString());
+//                if (editTextname.getText().toString() == "Chezare"){
+//                    System.out.println("xx");
+//                    if (editTextsupercode.getText().toString() != "1"){
+//                        editor.putString("user_name", "No!!!");
+//                        System.out.println("xxx");
+//                    }
+//                }
+//                if (editTextsupercode.getText().toString() == "1"){ editor.putBoolean("Supercode", true);}
+//                else {editor.putBoolean("Supercode", false);}
                 editor.apply();
                 onBackPressed();
             }
         });
+
         Button clearSettings = findViewById(R.id.clearSettings);
         clearSettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +106,7 @@ public class SettinsActivity extends AppCompatActivity {
                 editorShop.apply();
             }
         });
+
     }
 
     @Override

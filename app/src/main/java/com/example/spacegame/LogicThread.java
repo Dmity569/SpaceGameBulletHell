@@ -1,6 +1,9 @@
 package com.example.spacegame;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -11,6 +14,8 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.provider.MediaStore.Audio;
@@ -502,7 +507,7 @@ public class LogicThread extends Thread {
     public DrawThread drawThread;
     public DrawView drawView;
     public Player player;
-    private volatile boolean running = true;//флаг для остановки потока
+    private volatile boolean running = true; //флаг для остановки потока
     public SoundPool sp;
     public Dictionary<String, Integer> sounds = new Hashtable<>();
     public boolean gameover = false;
@@ -614,5 +619,10 @@ public class LogicThread extends Thread {
                 e.printStackTrace();
             }
         }
+
+//         //тут надо вызвать смерть...
+//         Intent myIntent = new Intent(player.context, DefeatActivity.class);
+//         player.context.startActivity(myIntent);
+
     }
 }

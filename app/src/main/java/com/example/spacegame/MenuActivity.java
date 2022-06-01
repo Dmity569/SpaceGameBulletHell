@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -52,6 +55,17 @@ public class MenuActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+
+        Button recordList = findViewById(R.id.Record_lis_btn);
+        recordList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MenuActivity.this, RecordActivity.class);
+                startActivity(i);
+            }
+        });
+
         if (mSettings.getBoolean("firstLaunch", true)) {
             editor.clear();
             editor.putString("selectedShip", "Arrow");
@@ -61,6 +75,7 @@ public class MenuActivity extends AppCompatActivity {
             editorShop.putBoolean("Arrow", true);
             editorShop.apply();
         }
+
     }
 }
 
