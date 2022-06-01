@@ -576,6 +576,7 @@ public class LogicThread extends Thread {
                 e.printStackTrace();
             }
         }
+
         //тут надо вызвать смерть...
         Intent myIntent = new Intent(player.context, DefeatActivity.class);
         player.context.startActivity(myIntent);
