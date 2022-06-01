@@ -8,6 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="145dp"
         tools:layout_editor_absoluteY="236dp">
@@ -17,27 +18,41 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/gorgeouspixel"
-            android:text="Editor" />
+            android:text="Editor"
+            android:textSize="36sp" />
 
         <Button
             android:id="@+id/ships"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/gorgeouspixel"
-            android:text="Ships" />
+            android:text="Ships"
+            android:textSize="36sp" />
 
         <Button
             android:id="@+id/weapon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/gorgeouspixel"
-            android:text="Weapons" />
+            android:text="Weapons"
+            android:textSize="36sp" />
 
         <Button
             android:id="@+id/specials"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/gorgeouspixel"
-            android:text="Specials" />
+            android:text="Specials"
+            android:textSize="36sp" />
+
+        <TextView
+            android:id="@+id/moneyShop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/gorgeouspixel"
+            android:paddingTop="100dp"
+            android:text="Money"
+            android:textAlignment="center"
+            android:textSize="36sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
