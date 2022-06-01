@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SettinsActivity extends AppCompatActivity {
     public SharedPreferences mSettings;
+    public SharedPreferences shopData;
 
     MediaPlayer mp;
 
@@ -28,6 +29,9 @@ public class SettinsActivity extends AppCompatActivity {
 
         mSettings = getSharedPreferences("mysettings", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mSettings.edit();
+
+        shopData = getSharedPreferences("shopData", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editorShop = shopData.edit();
 
 //        float volume = (float) mSettings.getInt("music", 50);
 //
@@ -86,6 +90,20 @@ public class SettinsActivity extends AppCompatActivity {
 //                else {editor.putBoolean("Supercode", false);}
                 editor.apply();
                 onBackPressed();
+            }
+        });
+
+        Button clearSettings = findViewById(R.id.clearSettings);
+        clearSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editor.clear();
+                editor.putString("selectedShip", "Arrow");
+                editor.putBoolean("firstLaunch", false);
+                editor.apply();
+                editorShop.clear();
+                editorShop.putBoolean("Arrow", true);
+                editorShop.apply();
             }
         });
 

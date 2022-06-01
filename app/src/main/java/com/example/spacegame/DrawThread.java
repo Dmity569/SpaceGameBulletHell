@@ -21,6 +21,7 @@ public class DrawThread extends Thread {
     private Bitmap bar_health;
     private Bitmap icon_gold;
     private Bitmap background;
+    private boolean firstEnd = true;
     private int bg_y1, bg_y2, bg_y3;
     public LogicThread logicThread;
     public Typeface pixel_tf;
@@ -33,7 +34,7 @@ public class DrawThread extends Thread {
         bar_health = BitmapFactory.decodeResource(context.getResources(), R.drawable.bar_health);
         icon_gold= BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_gold);
         background = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_level);
-        pixel_tf = Typeface.createFromAsset(context.getAssets(), "fonts/GorgeousPixel.ttf");
+        pixel_tf = Typeface.createFromAsset(context.getAssets(), "fonts/gorgeouspixel.ttf");
         this.surfaceHolder = surfaceHolder;
     }
 
@@ -76,6 +77,16 @@ public class DrawThread extends Thread {
                 text_paint.getTextSize() + icon_gold.getHeight(), text_paint);
 
     }
+
+    public void drawLevelEnd(Canvas c, Paint p) {
+        Paint text_paint = new Paint();
+        text_paint.setColor(Color.WHITE);
+        text_paint.setTextSize(120);
+        text_paint.setTypeface(pixel_tf);
+        c.drawColor(Color.argb(170, 0, 0, 0));
+        if (logicThread.win) c.drawText("LEVEL COMPLETE", Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 400, text_paint.getTextSize() * 4, text_paint);
+        else c.drawText("GAME OVER", Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 300, text_paint.getTextSize() * 4, text_paint);
+    }
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void run() {
@@ -88,7 +99,6 @@ public class DrawThread extends Thread {
             Canvas canvas = surfaceHolder.lockCanvas();
             if (canvas != null) {
                 try {
-                    if (logicThread.gameover == false) {
                         drawBG(canvas, paint);
 //
 //                    canvas.drawCircle(x, y, 50, paint);
@@ -122,13 +132,19 @@ public class DrawThread extends Thread {
                                 canvas.drawBitmap(n.sprite, n.x - n.sprite.getWidth() / 2, n.y - n.sprite.getHeight() / 2, paint));
                         logicThread.player.item_list.forEach((n) ->
                                 canvas.drawBitmap(n.sprite, n.x - n.sprite.getWidth() / 2, n.y - n.sprite.getHeight() / 2, paint));
-                        canvas.drawBitmap(logicThread.player.sprite, logicThread.player.x - logicThread.player.sprite.getWidth() / 2,
-                                logicThread.player.y - logicThread.player.sprite.getHeight() / 2, paint);
-                        drawUI(canvas, paint);
-                    }
-                    bg_y1 += 1;
-                    bg_y2 += 1;
-                    bg_y3 += 1;
+
+                        if (!logicThread.gameover) {
+                            canvas.drawBitmap(logicThread.player.sprite, logicThread.player.x - logicThread.player.sprite.getWidth() / 2,
+                                    logicThread.player.y - logicThread.player.sprite.getHeight() / 2, paint);
+                        }
+
+                        if (!(logicThread.gameover || logicThread.win)) {
+                            bg_y1 += 1;
+                            bg_y2 += 1;
+                            bg_y3 += 1;
+                        }
+                        if (logicThread.gameover || logicThread.win) drawLevelEnd(canvas, paint);
+                        else drawUI(canvas, paint);
                         Thread.sleep(10);
 
 
