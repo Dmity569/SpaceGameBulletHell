@@ -45,6 +45,12 @@
             android:layout_height="60dp"
             android:fontFamily="@font/gorgeouspixel"
             android:text="Creators" />
+
+        <Button
+            android:id="@+id/Record_lis_btn"
+            android:layout_width="128dp"
+            android:layout_height="wrap_content"
+            android:text="Record_list" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

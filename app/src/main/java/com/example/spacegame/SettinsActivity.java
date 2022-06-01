@@ -59,9 +59,9 @@ public class SettinsActivity extends AppCompatActivity {
         Switch Switch_альтернативное_управление = findViewById(R.id.Switch_альтернативное_управление);
         Switch_альтернативное_управление.setChecked(mSettings.getBoolean("альтернативное_управление", false));
 
-//        EditText editTextname = (EditText) findViewById(R.id.textView8);
-//        editTextname.setText(mSettings.getString("user_name", "Select_your_name"));
-//
+        EditText editTextname = (EditText) findViewById(R.id.textView8);
+        editTextname.setText(mSettings.getString("user_name", "Select_your_name"));
+
 //        EditText editTextsupercode = (EditText) findViewById(R.id.textView9);
 //        editTextsupercode.setText("0");
 
@@ -73,7 +73,7 @@ public class SettinsActivity extends AppCompatActivity {
                 editor.putInt("music", music.getProgress());
                 editor.putInt("sound", sound.getProgress());
                 editor.putBoolean("альтернативное_управление", Switch_альтернативное_управление.isChecked());
-//                editor.putString("user_name", editTextname.getText().toString());
+                editor.putString("user_name", editTextname.getText().toString());
 //                System.out.println(editTextname.getText().toString());
 //                if (editTextname.getText().toString() == "Chezare"){
 //                    System.out.println("xx");

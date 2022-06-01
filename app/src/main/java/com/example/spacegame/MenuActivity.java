@@ -44,6 +44,15 @@ public class MenuActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        Button recordList = findViewById(R.id.Record_lis_btn);
+        recordList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MenuActivity.this, RecordActivity.class);
+                startActivity(i);
+            }
+        });
     }
 }
 
