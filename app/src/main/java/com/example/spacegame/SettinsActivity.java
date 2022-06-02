@@ -22,6 +22,8 @@ public class SettinsActivity extends AppCompatActivity {
 
     MediaPlayer mp;
 
+    public static String BASE_URL1 = "http://192.168.0.207:8080";
+
     @RequiresApi(api = Build.VERSION_CODES.O)
 
     @Override
@@ -66,6 +68,9 @@ public class SettinsActivity extends AppCompatActivity {
         EditText editTextname = (EditText) findViewById(R.id.textView8);
         editTextname.setText(mSettings.getString("user_name", "Select_your_name"));
 
+        EditText BASE_URL = (EditText) findViewById(R.id.textView12);
+        BASE_URL.setText(mSettings.getString("BASE_URL", "http://192.168.0.207:8080"));
+
 //        EditText editTextsupercode = (EditText) findViewById(R.id.textView9);
 //        editTextsupercode.setText("0");
 
@@ -78,6 +83,7 @@ public class SettinsActivity extends AppCompatActivity {
                 editor.putInt("sound", sound.getProgress());
                 editor.putBoolean("альтернативное_управление", Switch_альтернативное_управление.isChecked());
                 editor.putString("user_name", editTextname.getText().toString());
+                editor.putString("BASE_URL", BASE_URL.getText().toString());
 //                System.out.println(editTextname.getText().toString());
 //                if (editTextname.getText().toString() == "Chezare"){
 //                    System.out.println("xx");
@@ -89,6 +95,7 @@ public class SettinsActivity extends AppCompatActivity {
 //                if (editTextsupercode.getText().toString() == "1"){ editor.putBoolean("Supercode", true);}
 //                else {editor.putBoolean("Supercode", false);}
                 editor.apply();
+                BASE_URL1 = mSettings.getString("BASE_URL", "http://192.168.0.207:8080");
                 onBackPressed();
             }
         });
@@ -104,6 +111,7 @@ public class SettinsActivity extends AppCompatActivity {
                 editorShop.clear();
                 editorShop.putBoolean("Arrow", true);
                 editorShop.apply();
+
             }
         });
 

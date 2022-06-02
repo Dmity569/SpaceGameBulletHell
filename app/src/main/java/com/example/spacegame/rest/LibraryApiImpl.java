@@ -13,8 +13,11 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.spacegame.RecordActivity;
+import com.example.spacegame.SettinsActivity;
 import com.example.spacegame.domain.Record;
 import com.example.spacegame.fakedb.LibraryFakeDb;
+
+import android.content.SharedPreferences;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,14 +28,18 @@ import java.util.Map;
 
 public class LibraryApiImpl implements LibraryApi {
 
-    public static final String BASE_URL = "http://192.168.0.207:8080";
+    public SharedPreferences mSettings;
+
+    public static String BASE_URL = "http://192.168.0.207:8080";
     private final Context context;
+
 
     private Response.ErrorListener errorListener;
 
     public LibraryApiImpl(Context context) {
 
         this.context = context;
+        BASE_URL = SettinsActivity.BASE_URL1;
         errorListener = new ErrorListenerImpl();
     }
 
@@ -130,8 +137,9 @@ public class LibraryApiImpl implements LibraryApi {
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d("Error", error.getMessage());
-            Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+//            Log.d("Error", error.getMessage());
+            Toast.makeText(context, "не удалось подключиться к серверу", Toast.LENGTH_SHORT).show();
+            Log.d("Error", BASE_URL);
         }
     }
 
