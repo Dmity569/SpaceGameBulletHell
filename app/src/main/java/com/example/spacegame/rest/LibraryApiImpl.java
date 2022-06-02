@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class LibraryApiImpl implements LibraryApi {
 
-    public static final String BASE_URL = "http://192.168.0.247:8080";
+    public static final String BASE_URL = "http://192.168.0.207:8080";
     private final Context context;
 
     private Response.ErrorListener errorListener;
