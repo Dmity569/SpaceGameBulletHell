@@ -34,6 +34,8 @@ import static java.lang.Math.sqrt;
 import static java.lang.Math.toDegrees;
 import static java.lang.Math.toRadians;
 
+import com.example.spacegame.domain.Record;
+
 class Player {
     float x;
     float y;
@@ -544,13 +546,29 @@ public class LogicThread extends Thread {
         mSettings = help_me(player.context);
         editor = mSettings.edit();
         player.initialize();
+        boolean flag = true;
 
         int t = 0;
         int spawns = 0;
         while (running) {
             try {
-                if (win) {}
-                else if (gameover) {}
+                if (win || gameover) {
+                    if (flag){
+                        int a = mSettings.getInt("score", 0);
+                        editor.putInt("score", player.money + a);
+                        editor.apply();
+                        String login = mSettings.getString("user_name", "bolean_name");
+                        int score = mSettings.getInt("score", 0);
+
+                        Record record = new com.example.spacegame.domain.Record(
+                                0,
+                                login,
+                                score
+                        );
+                        new com.example.spacegame.rest.LibraryApiImpl(player.context).newRecord(record);
+                        flag = false;
+                    }
+                }
                 else {
                     player.shoot();
                     if (t % 80 == 0)

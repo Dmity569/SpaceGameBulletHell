@@ -11,43 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="center">
-        <EditText
-            android:id="@+id/et_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:padding="12dp"
-            android:text="100"
-            android:textColor="@color/black"
-            tools:layout_editor_absoluteX="249dp"
-            tools:layout_editor_absoluteY="173dp" />
-
-        <EditText
-            android:id="@+id/et_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:padding="12dp"
-            android:text="Ivan"
-            android:textColor="@color/black"
-            tools:layout_editor_absoluteX="103dp"
-            tools:layout_editor_absoluteY="173dp" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:padding="12dp"
-            android:text="OK"
-            android:textColor="@color/white"
-            tools:layout_editor_absoluteX="161dp"
-            tools:layout_editor_absoluteY="269dp" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        android:layout_gravity="center"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_records"
         android:layout_width="match_parent"
