@@ -557,7 +557,7 @@ public class LogicThread extends Thread {
                         int a = mSettings.getInt("score", 0);
                         editor.putInt("score", player.money + a);
                         editor.apply();
-                        String login = mSettings.getString("user_name", "bolean_name");
+                        String login = mSettings.getString("user_name", "Anonimus");
                         int score = mSettings.getInt("score", 0);
 
                         Record record = new com.example.spacegame.domain.Record(
