@@ -42,7 +42,7 @@ class Player {
     float max_health;
     float health;
     int money = 0;
-    Bitmap sprite;
+    Bitmap sprite; 
     ArrayList<Enemy> enemy_list = new ArrayList(50);
     ArrayList<Enemy> boss_list = new ArrayList(3);
     ArrayList<P_Projectile> proj_list = new ArrayList(50);
@@ -565,7 +565,7 @@ public class LogicThread extends Thread {
                                 login,
                                 score
                         );
-                        new com.example.spacegame.rest.LibraryApiImpl(player.context).newRecord(record);
+                        new com.example.spacegame.rest.LibraryApiImpl(player.context,  mSettings.getString("BASE_URL", "http://192.168.0.207:8080")).newRecord(record);
                         flag = false;
                     }
                 }

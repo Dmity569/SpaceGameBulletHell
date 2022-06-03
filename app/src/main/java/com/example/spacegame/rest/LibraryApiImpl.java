@@ -30,16 +30,18 @@ public class LibraryApiImpl implements LibraryApi {
 
     public SharedPreferences mSettings;
 
-    public static String BASE_URL = "http://192.168.0.207:8080";
+    public String BASE_URL = "http://192.168.0.207:8080";
     private final Context context;
 
 
     private Response.ErrorListener errorListener;
 
-    public LibraryApiImpl(Context context) {
+    public LibraryApiImpl(Context context, String url) {
 
         this.context = context;
-        BASE_URL = SettinsActivity.BASE_URL1;
+        BASE_URL = url; //SettinsActivity.BASE_URL1;
+        // mSettings = context.getSharedPreferences("mysettings", Context.MODE_PRIVATE);
+        // BASE_URL = mSettings.getString("BASE_URL", "http://192.168.0.207:8080");
         errorListener = new ErrorListenerImpl();
     }
 

@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -18,12 +20,15 @@ public class RecordActivity extends AppCompatActivity {
     private com.example.spacegame.domain.Record record;
     private com.example.spacegame.adapter.RecordAdapter adapter;
 
-    private final com.example.spacegame.rest.LibraryApi libraryApi = new com.example.spacegame.rest.LibraryApiImpl(this);
+    // private final com.example.spacegame.rest.LibraryApi libraryApi = new com.example.spacegame.rest.LibraryApiImpl(this);
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        String BASE_URL = "http://192.168.0.207:8080";
+        SharedPreferences mSettings = getSharedPreferences("mysettings", Context.MODE_PRIVATE);;
+        BASE_URL = mSettings.getString("BASE_URL", BASE_URL);
+        com.example.spacegame.rest.LibraryApi libraryApi = new com.example.spacegame.rest.LibraryApiImpl(this, BASE_URL);
         libraryApi.fillRecord();
 
     }
