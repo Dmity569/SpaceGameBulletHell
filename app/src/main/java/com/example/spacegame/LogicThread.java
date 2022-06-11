@@ -42,7 +42,7 @@ class Player {
     float max_health;
     float health;
     int money = 0;
-    Bitmap sprite; 
+    Bitmap sprite;
     ArrayList<Enemy> enemy_list = new ArrayList(50);
     ArrayList<Enemy> boss_list = new ArrayList(3);
     ArrayList<P_Projectile> proj_list = new ArrayList(50);
@@ -102,9 +102,9 @@ class Player {
             t = 0;
     }
 
-    public void initialize(){
+    public void initialize() {
         money = logicThread.mSettings.getInt("money", 0);
-        switch (logicThread.mSettings.getString("selectedShip", "Arrow")){
+        switch (logicThread.mSettings.getString("selectedShip", "Arrow")) {
             case "Arrow":
                 max_health = EditorInfo.Ship_Arrow.max_health;
                 health = max_health;
@@ -194,7 +194,7 @@ class Coin extends Entity {
             speed = 2;
             angle = 90;
         }
-        if(player.logicThread.win) player.money += value;
+        if (player.logicThread.win) player.money += value;
     }
 
 }
@@ -423,6 +423,53 @@ class Death_Skull extends Enemy {
     }
 }
 
+class Destroer extends Enemy {
+
+    public Destroer(float pos_x, float pos_y, Player plr) {
+        super(pos_x, pos_y, plr);
+        def = 200;
+        e_def = 200;
+        speed = 10;
+        health = 3500;
+        max_health = 3500;
+        sprite = BitmapFactory.decodeResource(plr.context.getResources(), R.drawable.enemy1);
+        target_y = 200;
+        moneyDrop = 1000;
+        size = 100;
+    }
+
+    @Override
+    public void action() {
+        super.action();
+        if (y >= target_y) {
+            if (target_y == 200) {
+                target_y = -100;
+                speed = 30;
+                angle = 0;
+            }
+            angle += 90;
+            if (angle >= 180)
+                angle -= 360;
+        }
+    }
+
+    @Override
+    public void shoot() {
+        super.shoot();
+        t += 10;
+        if (t % 10 == 0) {
+            for (int i = 0; i < 1; i++) {
+                int ang = new java.util.Random().nextInt(45) + 65;
+//                int ang = new java.util.Random().nextInt(360);
+                player.e_proj_list.add(new Death_Laser(x, y, player, ang));
+
+            }
+        }
+        if (t == 160)
+            t = 0;
+    }
+}
+
 class E_Projectile extends Entity {
     float atk = 1;
     float e_atk = 1;
@@ -542,7 +589,6 @@ public class LogicThread extends Thread {
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void run() {
-
         mSettings = help_me(player.context);
         editor = mSettings.edit();
         player.initialize();
@@ -553,7 +599,7 @@ public class LogicThread extends Thread {
         while (running) {
             try {
                 if (win || gameover) {
-                    if (flag){
+                    if (flag) {
                         int a = mSettings.getInt("score", 0);
                         editor.putInt("score", player.money + a);
                         editor.apply();
@@ -565,11 +611,10 @@ public class LogicThread extends Thread {
                                 login,
                                 score
                         );
-                        new com.example.spacegame.rest.LibraryApiImpl(player.context,  mSettings.getString("BASE_URL", "http://192.168.0.207:8080")).newRecord(record);
+                        new com.example.spacegame.rest.LibraryApiImpl(player.context, mSettings.getString("BASE_URL", "http://192.168.0.207:8080")).newRecord(record);
                         flag = false;
                     }
-                }
-                else {
+                } else {
                     player.shoot();
                     if (t % 80 == 0)
 
@@ -614,6 +659,9 @@ public class LogicThread extends Thread {
                         } else if (spawns == 16) {
 
                             player.boss_list.add(new Death_Skull(
+                                    Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 100,
+                                    0, player));
+                            player.boss_list.add(new Destroer(
                                     Resources.getSystem().getDisplayMetrics().widthPixels / 2 - 100,
                                     0, player));
                             spawns += 1;
